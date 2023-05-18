@@ -1,1 +1,22 @@
-create review
+<form method="post" action="">
+    {{ form.csrf_token }}
+    {{ form.home_type.label }} {{ form.home_type }}<br>
+    {{ form.address_line_1.label }} {{ form.address_line_1 }}<br>
+    {{ form.address_line_2.label }} {{ form.address_line_2 }}<br>
+    {{ form.city.label }} {{ form.city }}<br>
+    {{ form.postcode.label }} {{ form.postcode }}<br>
+
+    {{ form.overall_rating.label }} {{ form.overall_rating }}<br>
+    {{ form.condition_rating.label }} {{ form.condition_rating }}<br>
+    {{ form.security_rating.label }} {{ form.security_rating }}<br>
+    {{ form.landlord_rating.label }} {{ form.landlord_rating }}<br>
+    {{ form.letting_agent.label }} {{ form.letting_agent }}<br>
+    {{ form.review.label }} {{ form.review }}<br>
+
+    {{ form.university.label }} {{ form.univesity }}<br>
+    {{ form.first_name.label }} {{ form.first_name }}<br>
+    {{ form.last_name.label }} {{ form.last_name }}<br>
+    {{ form.email.label }} {{ form.email }}<br>
+    {{ form.accepted_terms.label }} {{ form.accepted_terms }}<br>
+    {{ form.submit() }}
+</form>
