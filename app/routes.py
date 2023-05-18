@@ -23,3 +23,7 @@ def create():
 @app.route('/help-center')
 def help():
     return render_template('help.html', title='Help Center')
+
+@app.route('/confirm')
+def confirm():
+    return render_template('confirm.html', title='Confirm')
