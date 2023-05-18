@@ -1,0 +1,16 @@
+from app import db
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
+    estate_agent_id = db.Column(db.Integer, db.ForeignKey('estate_agent.id'), nullable=False)
+    overall_rating = db.Column(db.Integer, nullable=False)
+    condition_rating = db.Column(db.Integer, nullable=False)
+    security_rating = db.Column(db.Integer, nullable=False)
+    landlord_rating = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    comment = db.Column(db.String(1000), nullable=False)
+
+    def __repr__(self):
+        return f"Review(id='{self.id}', user_id='{self.user_id}', property_id='{self.property_id}', estate_agent_id='{self.estate_agent_id}', overall_rating='{self.overall_rating}', condition_rating='{self.condition_rating}', security_rating='{self.security_rating}', landlord_rating='{self.landlord_rating}', date='{self.date}', comment='{self.comment}')" 
