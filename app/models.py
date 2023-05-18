@@ -41,6 +41,6 @@ class EstateAgent(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    NameError = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(256), nullable=False)
     email = db.Column(db.String(256), nullable=False)
     university = db.Column(db.String(256), nullable=False)
