@@ -31,3 +31,10 @@ class Halls(db.model):
     id = db.Column(db.Integer, primary_key=True)
     property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
     rent = db.Column(db.Integer, nullable=False)
+    
+class EstateAgent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
+    email = db.Column(db.String(256), nullable=False)
+    phone = db.Column(db.String(256), nullable=False)
+    website = db.Column(db.String(256), nullable=False)
