@@ -16,3 +16,7 @@ def review():
 @app.route('/review/create')
 def create():
     return render_template('create.html')
+
+@app.route('/help-center')
+def help():
+    return render_template('help.html')
