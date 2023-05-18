@@ -20,14 +20,14 @@ class Property(db.Model):
     place_id = db.Column(db.String(256), nullable=False)
     address = db.Column(db.String(256), nullable=False)
 
-class House(db.model):
+class House(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
     bedrooms = db.Column(db.Integer, nullable=False)
     bathrooms = db.Column(db.Integer, nullable=False)
     rent = db.Column(db.Integer, nullable=False)
 
-class Halls(db.model):
+class Halls(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
     rent = db.Column(db.Integer, nullable=False)
