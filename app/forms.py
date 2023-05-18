@@ -1,12 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, RadioField, SelectField, TextAreaField, IntegerRangeField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import DataRequired, Length, NumberRange, ValidationError
+from app.maps import get_place_id
 
 class CreateReviewForm(FlaskForm):
     # step 1
     home_type = RadioField("Do you live in a house or halls?", choices=[('house','House'),('halls','Halls')])
     address_line_1 = StringField("Address Line 1", validators=[DataRequired(), Length(min=2, max=94)])
-    address_line_2 = StringField("Address Line 2", validators=[DataRequired(), Length(min=2, max=94)])
+    address_line_2 = StringField("Address Line 2", validators=[Length(max=94)])
     city = StringField("City", validators=[DataRequired(), Length(min=2, max=58)])
     postcode = StringField("Postcode", validators=[DataRequired(), Length(min=2, max=10)])
 
@@ -16,7 +17,7 @@ class CreateReviewForm(FlaskForm):
     security_rating = IntegerRangeField("Security Rating", default=2 , validators=[DataRequired(), NumberRange(min=0, max=4)])
     landlord_rating = IntegerRangeField("Landlord Rating", default=2 , validators=[DataRequired(), NumberRange(min=0, max=4)])
     letting_agent = SelectField("Letting Agent", choices=[('none','None'),('2let2','2Let2'),('student_cribs','Student Cribs'),('unite_students','Unite Students')])
-    review = TextAreaField("Review", validators=[DataRequired(), Length(min=2, max=1000)])
+    review = TextAreaField("Review", validators=[DataRequired(), Length(min=150, max=1000)])
 
     # step 3
     university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')])
@@ -25,3 +26,10 @@ class CreateReviewForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     accepted_terms = BooleanField("I accept the terms and conditions", validators=[DataRequired()])
     submit = SubmitField("Submit Review")
+
+    def validate_address(self, address_line_1, address_line_2, city, postcode):
+        formatted_address = address_line_1 + "+" + address_line_2 + "+" + city + "+" + postcode
+        place_id = get_place_id(formatted_address)
+        print (place_id)
+        if not place_id:
+            raise ValidationError("Invalid Address")
