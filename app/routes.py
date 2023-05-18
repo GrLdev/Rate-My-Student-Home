@@ -12,3 +12,7 @@ def about():
 @app.route('/review')
 def review():
     return render_template('review.html')
+
+@app.route('/review/create')
+def create():
+    return render_template('create.html')
