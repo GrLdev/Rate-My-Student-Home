@@ -4,6 +4,8 @@ from wtforms.validators import DataRequired, Length, NumberRange, ValidationErro
 from app.maps import get_place_id
 
 class CreateReviewForm(FlaskForm):
+    place_id = None
+
     # step 1
     home_type = RadioField("Do you live in a house or halls?", choices=[('house','House'),('halls','Halls')])
     address_line_1 = StringField("Address Line 1", validators=[DataRequired(), Length(min=2, max=94)])
@@ -27,9 +29,17 @@ class CreateReviewForm(FlaskForm):
     accepted_terms = BooleanField("I accept the terms and conditions", validators=[DataRequired()])
     submit = SubmitField("Submit Review")
 
-    def validate_address(self, address_line_1, address_line_2, city, postcode):
-        formatted_address = address_line_1 + "+" + address_line_2 + "+" + city + "+" + postcode
-        place_id = get_place_id(formatted_address)
-        print (place_id)
-        if not place_id:
-            raise ValidationError("Invalid Address")
+    def validate(self, extra_validators=None):
+        if not FlaskForm.validate(self):
+            return False
+        
+        combined_address = self.address_line_1.data + "+" + self.address_line_2.data + "+" + self.city.data + "+" + self.postcode.data
+
+        try:
+            self.place_id = get_place_id(combined_address)
+            if not self.place_id:
+                raise ValidationError("Place ID is invalid, make sure you entered a valid address")
+            return True
+        
+        except Exception as e:
+            raise ValidationError(f"An error occurred: {e}")

@@ -15,9 +15,11 @@ def about():
 def review():
     return render_template('review.html', title='Review')
 
-@app.route('/review/create')
+@app.route('/review/create', methods=['GET', 'POST'])
 def create():
     form = CreateReviewForm()
+    if form.validate_on_submit():
+        return render_template('confirm.html', title='Confirm')
     return render_template('create.html', title='Create Review', form=form)
 
 @app.route('/help-center')
