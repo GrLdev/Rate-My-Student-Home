@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, RadioField, SelectField, TextAreaField, IntegerRangeField
-from wtforms.validators import DataRequired, Length, NumberRange, ValidationError
+from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Regexp
 from app.maps import get_place_id
 
 class CreateReviewForm(FlaskForm):
@@ -11,7 +11,7 @@ class CreateReviewForm(FlaskForm):
     address_line_1 = StringField("Address Line 1", validators=[DataRequired(), Length(min=2, max=94)])
     address_line_2 = StringField("Address Line 2", validators=[Length(max=94)])
     city = StringField("City", validators=[DataRequired(), Length(min=2, max=58)])
-    postcode = StringField("Postcode", validators=[DataRequired(), Length(min=2, max=10)])
+    postcode = StringField("Postcode", validators=[DataRequired(), Length(min=5, max=8), Regexp("([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
 
     # step 2
     overall_rating = IntegerRangeField("Overall Rating", default=2 , validators=[DataRequired(), NumberRange(min=0, max=4)])
