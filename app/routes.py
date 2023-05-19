@@ -29,3 +29,7 @@ def help():
 @app.route('/confirm')
 def confirm():
     return render_template('confirm.html', title='Confirm')
+
+@app.route('/map')
+def map():
+    return render_template('map.html', title='Map')
