@@ -5,6 +5,7 @@ from app.models import Review, Property, House, Halls, EstateAgent, User
 with app.app_context():
     db.drop_all()
     db.create_all()
+
     review1 = Review(
         user_id=1,
         property_id=1,
@@ -30,22 +31,26 @@ with app.app_context():
     )
 
     property1 = Property(
-        place_id="123abc",
+        lat=51.49,
+        lng=-3.18,
         address="123 Main St"
     )
 
     property2 = Property(
-        place_id="456def",
+        lat=51.48,
+        lng=-3.17,
         address="456 Elm St"
     )
 
     property3 = Property(
-        place_id="789ghi",
+        lat=51.4967629,
+        lng=-3.1971658,
         address="Talybont South"
     )
 
     property4 = Property(
-        place_id="012jkl",
+        lat=51.4858228,
+        lng=-3.1723673,
         address="Senghennydd Court"
     )
 

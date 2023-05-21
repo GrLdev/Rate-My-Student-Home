@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, RadioField, SelectField, TextAreaField, IntegerRangeField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Regexp
-from app.maps import get_place_id
+from app.maps import get_coords
 from decimal import Decimal
 from app.models import EstateAgent, Halls, Property
 
@@ -15,7 +15,9 @@ class PriceField(DecimalField):
                 raise ValueError(self.gettext('Invalid rent value'))
 
 class CreateReviewForm(FlaskForm):
-    place_id = None
+    # place_id = None
+    lat = None
+    lng = None
 
     # step 1
     home_type = RadioField("Do you live in a house or halls?", choices=[('house','House'),('halls','Halls')], validators=[DataRequired()])
@@ -49,8 +51,8 @@ class CreateReviewForm(FlaskForm):
         try:
             if self.home_type.data == "house":
                 combined_address = self.address_line_1.data + "+" + self.address_line_2.data + "+" + self.city.data + "+" + self.postcode.data
-                self.place_id = get_place_id(combined_address)
-                if not self.place_id:
+                self.lat, self.lng = get_coords(combined_address)
+                if not self.lat or not self.lng:
                     raise ValidationError("Place ID is invalid, make sure you entered a valid address")
 
             return True
