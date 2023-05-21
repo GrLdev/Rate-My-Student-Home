@@ -30,102 +30,122 @@ with app.app_context():
     )
 
     property1 = Property(
-        place_id="123abc",
+        lat=51.49,
+        lng=-3.18,
         address="123 Main St"
     )
 
     property2 = Property(
-        place_id="456def",
+        lat=51.48,
+        lng=-3.17,
         address="456 Elm St"
     )
 
     property3 = Property(
-        place_id="ChIJH2NCFZ4cbkgRPSlOcvlFOQY",
+        lat=51.4967629,
+        lng=-3.1971658,
         address="Talybont South"
     )
 
     property4 = Property(
-        place_id="ChIJY120gL8cbkgReH6",
+        lat=51.4858228,
+        lng=-3.1723673,
         address="Senghennydd Court"
     )
 
     property5 = Property(
-        place_id="ChIJFX0bYKIcbkgRNkB9Gp5GFzU",
+        lat=51.49181986467401,
+        lng=-3.185855195185478,
         address="Aberconway Hall"
     )
 
     property6 = Property(
-        place_id="ChIJH2NCFZ4cbkgRPSlOcvlFOQY",
+        lat=51.48911313048784,
+        lng=-3.1838519077663965,
         address="Aberdare Hall"
     )
 
     property7 = Property(
-        place_id="ChIJVVVV_MgcbkgRab4VyaKDbfI",
+        lat=51.48076023130313,
+        lng=-3.1657288496028064,
         address="Adam Street Gardens"
     )
 
     property8 = Property(
-        place_id="Eh9DYXJ0d3JpZ2h0IEN0LCBDYXJkaWZmIENGMjQsIFVLIi4qLAoUChIJPcb1epQcbkgR2PTuMAxz-rQSFAoSCaVT1up7G25IEcFvu1PUINsQ",
+        lat=51.49750794691082,
+        lng=-3.174525130331824,
         address="Cartwright Court"
     )
 
     property9 = Property(
-        place_id="ChIJxVKK-Y8cbkgRr99rDdP-e0M",
+        lat=51.50427489262149,
+        lng=-3.1840767045009524,
         address="Clodien House"
     )
 
     property10 = Property(
-        place_id="ChIJmwp6gQYdbkgRHoE22rLIMk0",
+        lat=51.49150917424132,
+        lng=-3.1866835266264557,
         address="Colum Hall"
     )
 
     property11 = Property(
-        place_id="ChIJm6qyorgcbkgRAtERHigpBK0",
+        lat=51.48685458791538,
+        lng=-3.1708970597283526,
         address="Gordon Hall"
     )
 
     property12 = Property(
-        place_id="ChIJeabKs70cbkgRQfJboTxGGY0", 
+        lat=51.490742640482644,
+        lng=-3.177956727966567,
         address="Hodge Hall"
     )
 
     property13 = Property(
-        place_id="ChIJqcS7530dbkgR5Y654y9ZjgE",
+        lat=51.495507674603935,
+        lng=-3.17865270699747,
         address="Roy Jenkins Hall"
     )
 
     property14 = Property(
-        place_id="ChIJ1T-7G7kcbkgRannku9nn1lY",
+        lat=51.486328699297175,
+        lng=-3.173701264781204,
         address="Senghennydd Hall"
     )
 
     property15 = Property(
-        place_id="ChIJi3bs86IcbkgR4m4GXg16tsg",
+        lat=51.49130849578401,
+        lng=-3.185648980077052,
         address="Student Houses (Colum Road/Place)"
     )
 
     property16 = Property(
-        place_id="EiZMbGFuYmxlZGRpYW4gR2FyZGVucywgQ2FyZGlmZiBDRjI0LCBVSyIuKiwKFAoSCYd66qW-HG5IEXwVlE7EUgvvEhQKEgmlU9bqextuSBHBb7tT1CDbEA",
+        lat=51.48863414176451,
+        lng=-3.1759052969870987,
         address="Student Houses (Village)"
     )
 
     property17 = Property(
-        place_id="ChIJoSyzG58cbkgREaQDN19DTPI",
+        lat=51.49446523907291,
+        lng=-3.1911491294088616,
         address="Talybont Court"
     )
 
     property18 = Property(
-        place_id="ChIJnakuk2MbbkgRq1PH8zLU61c",
+        lat=51.49895159552787,
+        lng=-3.2012141761878095,
         address="Talybont Gate"
     )
 
     property19 = Property(
-        place_id="ChIJuaxNQhkbbkgRs---OHJgm4Q",
+        lat=51.4991788202768,
+        lng=-3.1985997256895624,
         address="Talybont North"
     )
 
     property20 = Property(
-        place_id="ChIJg-W_9fEcbkgRsJuankMUpDo",
+        lat=51.504909686036314,
+        lng=-3.1669502574258854,
         address="University Hall"
     )
 
