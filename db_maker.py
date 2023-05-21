@@ -2,6 +2,9 @@ from datetime import datetime
 from app import db
 from app.models import Review, Property, House, Halls, EstateAgent, User
 
+db.drop_all()
+db.create_all()
+
 review1 = Review(
     user_id=1,
     property_id=1,
