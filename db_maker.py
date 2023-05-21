@@ -260,11 +260,9 @@ with app.app_context():
     )
 
     db.session.add_all([review1, review2, 
-                        property1, property2, property3, property4, property5, property6, property7, property8, 
-                        property9, property10, property11, property12, property13, property14, property15, property16, property17, property18, property19, property20,
+                        property1, property2, property3, property4, property5, property6, property7, property8, property9, property10, property11, property12, property13, property14, property15, property16, property17, property18, property19, property20,
                         house1, house2, 
-                        talybont_south, senghennydd_court, aberconway_hall, aberdare_hall, adam_street_gardens, cartwright_court, 
-                        clodien_house, colum_hall, gordon_hall, hodge_hall, roy_jenkins_hall, senghennydd_hall, student_houses_colum, student_houses_village, talybont_court, talybont_gate, talybont_north, university_hall,
+                        talybont_south, senghennydd_court, aberconway_hall, aberdare_hall, adam_street_gardens, cartwright_court, clodien_house, colum_hall, gordon_hall, hodge_hall, roy_jenkins_hall, senghennydd_hall, student_houses_colum, student_houses_village, talybont_court, talybont_gate, talybont_north, university_hall,
                         estate_agent1, estate_agent2, 
                         user1, user2])
     db.session.commit()
