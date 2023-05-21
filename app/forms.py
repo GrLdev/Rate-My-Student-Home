@@ -18,7 +18,7 @@ class CreateReviewForm(FlaskForm):
     place_id = None
 
     # step 1
-    home_type = RadioField("Do you live in a house or halls?", choices=[('house','House'),('halls','Halls')], validators=[DataRequired()])
+    home_type = RadioField("Do you live in a house or halls?", choices=[('house','House'),('halls','Halls')], validators=[DataRequired()], default='house')
     address_line_1 = StringField("Address Line 1", validators=[Length(min=2, max=94)])
     address_line_2 = StringField("Address Line 2", validators=[Length(max=94)])
     city = StringField("City", validators=[Length(min=2, max=58)])
