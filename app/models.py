@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,7 +10,7 @@ class Review(db.Model):
     condition_rating = db.Column(db.Integer, nullable=False)
     security_rating = db.Column(db.Integer, nullable=False)
     landlord_rating = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now())
     comment = db.Column(db.String(1000), nullable=False)
 
     def __repr__(self):
