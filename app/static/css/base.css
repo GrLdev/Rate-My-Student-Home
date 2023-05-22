@@ -5,16 +5,14 @@
 }
 nav{
   flex: 1;
-  text-align: left;
+  font-family: 'Montserrat', sans-serif;
 }
-nav ul{
-  display: inline-block;
-  list-style-type: none;
-}
+
 nav ul li{
   display: inline-block;
   margin-right: 20px;
 }
-a{
+nav a{
+  /*Remove default link styling in navbar*/
   text-decoration: none;
 }
