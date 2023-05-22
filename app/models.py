@@ -18,7 +18,8 @@ class Review(db.Model):
 
 class Property(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    place_id = db.Column(db.String(256), nullable=False)
+    lat = db.Column(db.Float, nullable=False)
+    lng = db.Column(db.Float, nullable=False)
     address = db.Column(db.String(256), nullable=False)
 
 class House(db.Model):

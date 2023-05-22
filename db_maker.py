@@ -5,6 +5,7 @@ from app.models import Review, Property, House, Halls, EstateAgent, User
 with app.app_context():
     db.drop_all()
     db.create_all()
+
     review1 = Review(
         user_id=1,
         property_id=1,

@@ -26,7 +26,7 @@ def create():
         db.session.commit()
         if form.home_type.data == 'house':
             address = form.address_line_1.data + (', ' + form.address_line_2.data if form.address_line_2.data else '') + ', ' + form.city.data + ', ' + form.postcode.data
-            property = Property(place_id=form.place_id, address=address)
+            property = Property(lat=form.lat, lng=form.lng, address=address)
             db.session.add(property)
             db.session.commit()
 
