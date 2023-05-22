@@ -16,15 +16,17 @@
 <body>
 <header>
     <nav class="navbar">
-            <ul>
-                <li class="nav-logo"><img
-                        src="{{ url_for('static', filename='img/' + 'LogoPlaceholder.png') }}"
-                        alt="RMSH Logo Placeholder"></li>
-                <li class="nav-crumb"><a class="primaryRed" href="/">Home</a></li>
-                <li class="nav-crumb"><a class="secondaryRed" href="/review">Reviews</a></li>
-                <li class="nav-crumb"><a class="secondaryRed" href="/about">About Us</a></li>
-                <li class="nav-crumb"><a class="secondaryRed" href="/help-center">Help</a></li>
-            </ul>
+        <ul>
+            <li class="nav-logo"><a href="/">
+                <img src="{{ url_for('static', filename='img/' + 'LogoPlaceholder.png') }}"
+                     alt="RMSH Logo Placeholder">
+            </a>
+            </li>
+            <li class="nav-crumb"><a class="primaryRed" href="/">Home</a></li>
+            <li class="nav-crumb"><a class="secondaryRed" href="/review">Reviews</a></li>
+            <li class="nav-crumb"><a class="secondaryRed" href="/about">About Us</a></li>
+            <li class="nav-crumb"><a class="secondaryRed" href="/help-center">Help</a></li>
+        </ul>
     </nav>
 
 </header>
