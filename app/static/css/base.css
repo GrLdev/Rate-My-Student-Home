@@ -5,7 +5,7 @@
 }
 nav{
   flex: 1;
-  text-align: right;
+  text-align: left;
 }
 nav ul{
   display: inline-block;
@@ -17,8 +17,4 @@ nav ul li{
 }
 a{
   text-decoration: none;
-  color: grey;
-}
-p{
-  color:black;
 }
