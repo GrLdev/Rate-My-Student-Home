@@ -22,9 +22,9 @@
       {{ form.security_rating.label }} {{ form.security_rating }}<br>
       {{ form.landlord_rating.label }} {{ form.landlord_rating }}<br>
 
+      {{ form.rent.label }} {{ form.rent }}<br>
       <div id="additionalFields">
         {{ form.letting_agent.label }} {{ form.letting_agent }}<br>
-        {{ form.rent.label }} {{ form.rent }}<br>
         {{ form.bedrooms.label }} {{ form.bedrooms }}<br>
         {{ form.bathrooms.label }} {{ form.bathrooms }}<br>
       </div>
@@ -50,10 +50,18 @@
           addressFields.style.display = 'block';
           hallField.style.display = 'none';
           additionalFields.style.display = 'block';
+          document.getElementById('rent').required = true;
+          document.getElementById('address_line_1').required = true;
+          document.getElementById('city').required = true;
+          document.getElementById('postcode').required = true;
         } else {
           addressFields.style.display = 'none';
           hallField.style.display = 'block';
           additionalFields.style.display = 'none';
+          document.getElementById('rent').required = false;
+          document.getElementById('address_line_1').required = false;
+          document.getElementById('city').required = false;
+          document.getElementById('postcode').required = false;
         }
       }
       
