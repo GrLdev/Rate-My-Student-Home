@@ -50,10 +50,12 @@
           addressFields.style.display = 'block';
           hallField.style.display = 'none';
           additionalFields.style.display = 'block';
+          document.getElementById('rent').required = true;
         } else {
           addressFields.style.display = 'none';
           hallField.style.display = 'block';
           additionalFields.style.display = 'none';
+          document.getElementById('rent').required = false;
         }
       }
       
