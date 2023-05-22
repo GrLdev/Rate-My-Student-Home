@@ -30,23 +30,123 @@ with app.app_context():
     )
 
     property1 = Property(
-        place_id="123abc",
+        lat=51.49,
+        lng=-3.18,
         address="123 Main St"
     )
 
     property2 = Property(
-        place_id="456def",
+        lat=51.48,
+        lng=-3.17,
         address="456 Elm St"
     )
 
     property3 = Property(
-        place_id="789ghi",
+        lat=51.4967629,
+        lng=-3.1971658,
         address="Talybont South"
     )
 
     property4 = Property(
-        place_id="012jkl",
+        lat=51.4858228,
+        lng=-3.1723673,
         address="Senghennydd Court"
+    )
+
+    property5 = Property(
+        lat=51.49181986467401,
+        lng=-3.185855195185478,
+        address="Aberconway Hall"
+    )
+
+    property6 = Property(
+        lat=51.48911313048784,
+        lng=-3.1838519077663965,
+        address="Aberdare Hall"
+    )
+
+    property7 = Property(
+        lat=51.48076023130313,
+        lng=-3.1657288496028064,
+        address="Adam Street Gardens"
+    )
+
+    property8 = Property(
+        lat=51.49750794691082,
+        lng=-3.174525130331824,
+        address="Cartwright Court"
+    )
+
+    property9 = Property(
+        lat=51.50427489262149,
+        lng=-3.1840767045009524,
+        address="Clodien House"
+    )
+
+    property10 = Property(
+        lat=51.49150917424132,
+        lng=-3.1866835266264557,
+        address="Colum Hall"
+    )
+
+    property11 = Property(
+        lat=51.48685458791538,
+        lng=-3.1708970597283526,
+        address="Gordon Hall"
+    )
+
+    property12 = Property(
+        lat=51.490742640482644,
+        lng=-3.177956727966567,
+        address="Hodge Hall"
+    )
+
+    property13 = Property(
+        lat=51.495507674603935,
+        lng=-3.17865270699747,
+        address="Roy Jenkins Hall"
+    )
+
+    property14 = Property(
+        lat=51.486328699297175,
+        lng=-3.173701264781204,
+        address="Senghennydd Hall"
+    )
+
+    property15 = Property(
+        lat=51.49130849578401,
+        lng=-3.185648980077052,
+        address="Student Houses (Colum Road/Place)"
+    )
+
+    property16 = Property(
+        lat=51.48863414176451,
+        lng=-3.1759052969870987,
+        address="Student Houses (Village)"
+    )
+
+    property17 = Property(
+        lat=51.49446523907291,
+        lng=-3.1911491294088616,
+        address="Talybont Court"
+    )
+
+    property18 = Property(
+        lat=51.49895159552787,
+        lng=-3.2012141761878095,
+        address="Talybont Gate"
+    )
+
+    property19 = Property(
+        lat=51.4991788202768,
+        lng=-3.1985997256895624,
+        address="Talybont North"
+    )
+
+    property20 = Property(
+        lat=51.504909686036314,
+        lng=-3.1669502574258854,
+        address="University Hall"
     )
 
     house1 = House(
@@ -63,14 +163,94 @@ with app.app_context():
         rent=2000
     )
 
-    halls1 = Halls(
+    talybont_south = Halls(
         property_id=3,
-        rent=1000
+        rent=61819
     )
 
-    halls2 = Halls(
+    senghennydd_court = Halls(
         property_id=4,
-        rent=1200
+        rent=53356
+    )
+
+    aberconway_hall = Halls(
+        property_id=5,
+        rent=57724
+    )
+
+    aberdare_hall = Halls(
+        property_id=6,
+        rent=53356
+    )
+
+    adam_street_gardens = Halls(
+        property_id=7,
+        rent=69333
+    )
+
+    cartwright_court = Halls(
+        property_id=8,
+        rent=53356
+    )
+
+    clodien_house = Halls(
+        property_id=9,
+        rent=68033
+    )
+
+    colum_hall = Halls(
+        property_id=10,
+        rent=61819
+    )
+
+    gordon_hall = Halls(
+        property_id=11,
+        rent=60575
+    )
+
+    hodge_hall = Halls(
+        property_id=12,
+        rent=57724
+    )
+
+    roy_jenkins_hall = Halls(
+        property_id=13,
+        rent=53356
+    )
+
+    senghennydd_hall = Halls(
+        property_id=14,
+        rent=69342
+    )
+
+    student_houses_colum = Halls(
+        property_id=15,
+        rent=48958
+    )
+
+    student_houses_village = Halls(
+        property_id=16,
+        rent=48958
+    )
+
+    talybont_court = Halls(
+        property_id=17,
+        rent=62759
+    )
+
+    talybont_gate = Halls(
+        property_id=18,
+        rent=62759
+    )
+
+    talybont_north = Halls(
+        property_id=19,
+        rent=53356
+    )
+
+    university_hall = Halls(
+        property_id=20,
+        rent=53356
     )
 
     estate_agent1 = EstateAgent(
@@ -99,5 +279,10 @@ with app.app_context():
         university="University of XYZ"
     )
 
-    db.session.add_all([review1, review2, property1, property2, property3, property4, house1, house2, halls1, halls2, estate_agent1, estate_agent2, user1, user2])
+    db.session.add_all([review1, review2, 
+                        property1, property2, property3, property4, property5, property6, property7, property8, property9, property10, property11, property12, property13, property14, property15, property16, property17, property18, property19, property20,
+                        house1, house2, 
+                        talybont_south, senghennydd_court, aberconway_hall, aberdare_hall, adam_street_gardens, cartwright_court, clodien_house, colum_hall, gordon_hall, hodge_hall, roy_jenkins_hall, senghennydd_hall, student_houses_colum, student_houses_village, talybont_court, talybont_gate, talybont_north, university_hall,
+                        estate_agent1, estate_agent2, 
+                        user1, user2])
     db.session.commit()
