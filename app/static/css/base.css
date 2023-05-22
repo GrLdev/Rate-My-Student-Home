@@ -1,8 +1,9 @@
 .navbar {
     display: flex;
-    align-items: stretch;
-    padding: 20px;
+    align-items: baseline;
     flex-wrap: nowrap;
+    justify-content: flex-start;
+    flex-direction: row;
 }
 
 nav {
@@ -22,4 +23,8 @@ nav a {
 
 .nav-logo img {
   height: 30px;
+
+}
+.nav-logo {
+  vertical-align: middle;
 }
