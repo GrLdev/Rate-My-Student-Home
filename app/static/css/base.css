@@ -1,0 +1,30 @@
+.navbar {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+nav {
+    flex: 1;
+    font-family: 'Montserrat', sans-serif;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav a {
+    /*Remove default link styling in navbar*/
+    text-decoration: none;
+}
+
+.nav-logo img {
+  height: 30px;
+
+}
+.nav-logo {
+  vertical-align: middle;
+}

@@ -1,19 +1,34 @@
 <html lang="en">
 <head>
     <title>Rate My Student Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    {#    Base Global Styles & Color Scheme#}
+    <link rel=stylesheet type=text/css href="{{ url_for('static',filename='css/base.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static',filename='css/colors.css') }}">
+
+    {#    Google Fonts Import#}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 </head>
 
 <body>
 <header>
-    <nav>
-        {#        TODO: Add NavBar#}
+    <nav class="navbar">
         <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/">About</a></li>
-            <li><a href="/">Search</a></li>
+            <li class="nav-logo"><a href="/">
+                <img src="{{ url_for('static', filename='img/' + 'LogoPlaceholder.png') }}"
+                     alt="RMSH Logo Placeholder">
+            </a>
+            </li>
+            <li class="nav-crumb"><a class="primaryRed" href="/">Home</a></li>
+            <li class="nav-crumb"><a class="secondaryRed" href="/review">Reviews</a></li>
+            <li class="nav-crumb"><a class="secondaryRed" href="/about">About Us</a></li>
+            <li class="nav-crumb"><a class="secondaryRed" href="/help-center">Help</a></li>
         </ul>
     </nav>
+
 </header>
 
 <div id="content">
