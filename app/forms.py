@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, RadioField, SelectField, TextAreaField, IntegerRangeField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Regexp
 from app.maps import get_coords
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from app.models import EstateAgent, Halls, Property
 
 class PriceField(DecimalField):
@@ -10,9 +10,12 @@ class PriceField(DecimalField):
         if valuelist:
             try:
                 self.data = int(Decimal(valuelist[0]) * 100)
-            except (ValueError, TypeError):
+            except InvalidOperation:
                 self.data = None
                 raise ValueError(self.gettext('Invalid rent value'))
+        else:
+            self.data = None
+
 
 class CreateReviewForm(FlaskForm):
     # place_id = None
@@ -34,7 +37,7 @@ class CreateReviewForm(FlaskForm):
     security_rating = IntegerRangeField("Security Rating", default=3 , validators=[DataRequired(), NumberRange(min=1, max=5)])
     landlord_rating = IntegerRangeField("Landlord Rating", default=3 , validators=[DataRequired(), NumberRange(min=1, max=5)])
     letting_agent = SelectField("Letting Agent", choices=[('none','None')] + [(agent.id, agent.name) for agent in EstateAgent.query.all()])
-    rent = PriceField("Rent £", validators=[DataRequired(), NumberRange(min=0, max=10000)])
+    rent = PriceField("Rent £", validators=[NumberRange(min=0, max=10000)])
     bedrooms = IntegerField("Bedrooms", default=1 , validators=[DataRequired(), NumberRange(min=1, max=10)])
     bathrooms = IntegerField("Bathrooms", default=1 , validators=[DataRequired(), NumberRange(min=1, max=10)])
     review = TextAreaField("Review", validators=[DataRequired(), Length(min=150, max=1000)])

@@ -38,7 +38,7 @@ def create():
         elif form.home_type.data == 'halls':
             hall = Halls.query.filter_by(id=form.hall.data).first()
             property_id = hall.property_id
-            review = Review(user_id=user.id, property_id=property_id, estate_agent_id=form.letting_agent.data, overall_rating=form.overall_rating.data, condition_rating=form.condition_rating.data, security_rating=form.security_rating.data, landlord_rating=form.landlord_rating.data, comment=form.review.data)
+            review = Review(user_id=user.id, property_id=property_id, estate_agent_id="none", overall_rating=form.overall_rating.data, condition_rating=form.condition_rating.data, security_rating=form.security_rating.data, landlord_rating=form.landlord_rating.data, comment=form.review.data)
 
         db.session.add(review)
         db.session.commit()
