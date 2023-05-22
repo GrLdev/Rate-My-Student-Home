@@ -2,18 +2,21 @@
 <head>
     <title>Rate My Student Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel=stylesheet type=text/css href="{{ url_for('static',filename='base.css') }}">
 </head>
 
 <body>
 <header>
-    <nav class="crumbs">
-        <ol>
-            <li class="nav-crumb"><a href="/">Home</a></li>
-            <li class="nav-crumb"><a href="/review">Reviews</a></li>
-            <li class="nav-crumb"><a href="/about">About Us</a></li>
-            <li class="nav-crumb"><a href="/help-center">Help</a></li>
-        </ol>
-    </nav>
+    <div class="navbar">
+        <nav class="main-nav">
+            <ol>
+                <li class="nav-crumb"><a href="/">Home</a></li>
+                <li class="nav-crumb"><a href="/review">Reviews</a></li>
+                <li class="nav-crumb"><a href="/about">About Us</a></li>
+                <li class="nav-crumb"><a href="/help-center">Help</a></li>
+            </ol>
+        </nav>
+    </div>
 
 </header>
 
