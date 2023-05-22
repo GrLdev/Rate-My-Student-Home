@@ -3,7 +3,7 @@
     <title>Rate My Student Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-{#    Base Global Styles & Color Scheme#}
+    {#    Base Global Styles & Color Scheme#}
     <link rel=stylesheet type=text/css href="{{ url_for('static',filename='css/base.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static',filename='css/colors.css') }}">
 
@@ -18,6 +18,9 @@
     <div class="navbar">
         <nav class="main-nav">
             <ul>
+                <li class="nav-logo"><img
+                        src="{{ url_for('static', filename='img/' + 'LogoPlaceholder.png') }}"
+                        alt="RMSH Logo Placeholder"></li>
                 <li class="nav-crumb"><a class="primaryRed" href="/">Home</a></li>
                 <li class="nav-crumb"><a class="secondaryRed" href="/review">Reviews</a></li>
                 <li class="nav-crumb"><a class="secondaryRed" href="/about">About Us</a></li>
