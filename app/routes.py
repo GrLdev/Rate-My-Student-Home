@@ -2,6 +2,7 @@ from app import app, db
 from flask import render_template
 from app.forms import CreateReviewForm
 from app.models import Review, Property, House, Halls, EstateAgent, User
+from secret_keys import google_maps_api_key
 
 @app.route('/')
 def home():
@@ -55,4 +56,32 @@ def confirm():
 
 @app.route('/map')
 def map():
-    return render_template('map.html', title='Map')
+    property_location_data = {}
+    properties = Property.query.all()
+    
+    for property in properties:
+
+        reviews = Review.query.filter_by(property_id=property.id).all()
+        avg_rating = 0
+        if len(reviews) != 0:
+            for review in reviews:
+                avg_rating += review.overall_rating
+            avg_rating /= len(reviews)
+
+        houses = House.query.filter_by(property_id=property.id).all()
+        halls = Halls.query.filter_by(property_id=property.id).all()
+        if houses:
+            rent = houses[0].rent
+        elif halls:
+            rent = halls[0].rent
+        else:
+            rent = 0
+        rent = rent/100
+
+        property_location_data[property.id] = {
+            "coords" : [property.lat, property.lng],
+            "address" : property.address,
+            "avg_rating" : avg_rating,
+            "rent" : rent,
+        }
+    return render_template('map.html', title='Map', property_location_data=property_location_data, google_maps_api_key=google_maps_api_key)

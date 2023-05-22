@@ -1,5 +1,140 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Map View</h1>
-{#    TODO: Add Map content#}
-{% endblock content %}
+
+    <script src="http://maps.google.com/maps/api/js?key={{ google_maps_api_key }}" type="text/javascript"></script>
+    <div id="map" style="width: 90%; height: 600px;"></div>
+    <style>
+        #map {
+          height: 500px; /* fallback height */
+          max-width: 100%; /* ensure the map container doesn't overflow the viewport */
+          margin: 0 auto; /* center the map container horizontally */
+        }
+        </style>
+    <script type="text/javascript">
+        async function initMap() {
+
+            const { Map } = await google.maps.importLibrary("maps");
+
+            var locations = {{ property_location_data|tojson|safe }};
+            const map = new Map(document.getElementById('map'), {
+                zoom: 15,
+                streetViewControl: false,
+                center: {lat: 51.48861251714875, lng: -3.1756614114297985 },
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false,
+                fullscreenControl: false,
+                mapId: '1d460afddceb1483',
+            });
+
+            var infowindow = new google.maps.InfoWindow();
+            var marker, i;
+
+            for (var property_id in locations){
+                if (locations.hasOwnProperty(property_id)){            
+
+                    function pinSymbol(color) {
+                        return {
+                            path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+                            fillColor: color,
+                            fillOpacity: 0.9,
+                            strokeColor: '#22211F',
+                            strokeWeight: 0,
+                            scale: 1.3
+                        };
+                    }
+
+                    // Define the minimum and maximum rating values
+                    const minRating = 1;
+                    const maxRating = 5;
+
+                    // Define the minimum and maximum color values in the gradient
+                    const unratedColor = [115, 115, 115];  // Light Grey
+                    const minColor = [255, 0, 0];    // Red
+                    const midColor = [255, 255, 0];    // Yellow
+                    const maxColor = [0, 255, 0];    // Green
+
+                    // Calculate the normalized value of avg_rating
+                    const normalizedRating = (locations[property_id].avg_rating - minRating) / (maxRating - minRating);
+                    
+                    let interpolatedColor;
+                    if (locations[property_id].avg_rating === 0) {
+                        interpolatedColor = unratedColor;
+                      } else {
+                        // Interpolate the color based on the normalized value
+                        
+                        if (normalizedRating <= 0.5) {
+                        interpolatedColor = interpolateColor(minColor, midColor, normalizedRating * 2);
+                        } else {
+                        interpolatedColor = interpolateColor(midColor, maxColor, (normalizedRating - 0.5) * 2);
+                        }
+                    }
+
+                    // Convert the interpolated color to hexadecimal format
+                    const hexColor = rgbToHex(interpolatedColor[0], interpolatedColor[1], interpolatedColor[2]);
+
+                    // Use the hexColor variable as needed
+
+                    // Function to interpolate color values
+                    function interpolateColor(color1, color2, t) {
+                    const interpolatedColor = [];
+                    for (let i = 0; i < color1.length; i++) {
+                        const value = Math.round(color1[i] * (1 - t) + color2[i] * t);
+                        interpolatedColor.push(value);
+                    }
+                    return interpolatedColor;
+                    }
+
+                    // Function to convert RGB values to hexadecimal format
+                    function componentToHex(c) {
+                    const hex = c.toString(16);
+                    return hex.length === 1 ? "0" + hex : hex;
+                    }
+
+                    function rgbToHex(r, g, b) {
+                    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+                    }
+
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(locations[property_id].coords[0], locations[property_id].coords[1]),
+                        map: map,
+                        address: locations[property_id].address,
+                        avg_rating: locations[property_id].avg_rating,
+                        rent: locations[property_id].rent,
+                        icon: pinSymbol(hexColor)
+                    });
+
+                    google.maps.event.addListener(marker, 'mouseover', (function(marker) {
+                        return function() {
+                        infowindow.setContent(
+                            "<p>"+marker.address+"</p>"+
+                            "<p>Rating: "+marker.avg_rating+"</p>"+
+                            "<p>Rent: £"+marker.rent+" per month</p>"
+                        );
+                        infowindow.open(map, marker);
+                        }
+                    })(marker));
+
+                    google.maps.event.addListener(marker, 'mouseout', (function(marker) {
+                        return function() {
+                        infowindow.close();
+                        }
+                    })(marker));
+
+                    google.maps.event.addListener(marker, 'click', (function(marker) {
+                        return function() {
+                            {# example code from my other project, clicking the marker takes you to a page specific to the item the marker represents, could be useful later #}
+                            {# window.location.href = ("{{ url_for('post', post_id=''|int) }}".concat(marker.id)); #}
+                        }
+                    })
+                    (marker));
+                }
+            }
+
+        }
+
+        initMap();
+
+    </script>
+        
+{% endblock content %} 
