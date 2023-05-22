@@ -40,7 +40,7 @@ class CreateReviewForm(FlaskForm):
     review = TextAreaField("Review", validators=[DataRequired(), Length(min=150, max=1000)])
 
     # step 3
-    university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')])
+    university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
     first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
     last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
     email = StringField("Email", validators=[DataRequired()])
