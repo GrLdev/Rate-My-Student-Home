@@ -1,8 +1,9 @@
 from app import app, db
-from flask import render_template
-from app.forms import CreateReviewForm
+from flask import render_template, url_for, redirect, request, jsonify
+from app.forms import CreateReviewForm, SearchForm, SortForm
 from app.models import Review, Property, House, Halls, EstateAgent, User
 from secret_keys import google_maps_api_key
+from sqlalchemy import or_
 
 @app.route('/')
 def home():
@@ -12,10 +13,112 @@ def home():
 def about():
     return render_template('about.html', title='About')
 
-@app.route('/review')
-@app.route('/review/')  
+@app.route('/review', methods=['GET', 'POST'])
+@app.route('/review/', methods=['GET', 'POST'])
 def review():
-    return render_template('review.html', title='Review')
+    form = SearchForm()
+    if form.validate_on_submit():
+        sort_form = SortForm()
+        search_type = form.search_type.data
+        reviews = []
+        location = None
+
+        if search_type == "address":
+            ### code to search for both halls and houses
+            # property = Property.query.filter(
+            #     or_(Property.address.ilike(f'{form.search_address.data}%'), Property.address.ilike(f'% {form.search_address.data}%'))
+            # ).order_by(
+            #     Property.address.ilike(f'{form.search_address.data}%').desc(),
+            #     Property.address.ilike(f'%{form.search_address.data}%').desc()
+            # ).first()
+            property = Property.query.join(House).filter(
+                or_(Property.address.ilike(f'{form.search_address.data}%'), Property.address.ilike(f'% {form.search_address.data}%'))
+            ).order_by(
+                Property.address.ilike(f'{form.search_address.data}%').desc(),
+                Property.address.ilike(f'%{form.search_address.data}%').desc(),
+                Property.address
+            ).first()
+            if property:
+                location = property.address
+                reviews = Review.query.filter_by(property_id=property.id).all()
+
+        elif search_type == "halls":
+            property = Property.query.join(Halls).filter(
+                or_(Property.address.ilike(f'{form.search_address.data}%'), Property.address.ilike(f'% {form.search_address.data}%'))
+            ).order_by(
+                Property.address.ilike(f'{form.search_address.data}%').desc(),
+                Property.address.ilike(f'%{form.search_address.data}%').desc(),
+                Property.address
+            ).first()
+            if property:
+                location = property.address
+                reviews = Review.query.filter_by(property_id=property.id).all()
+
+        elif search_type == "agent":
+            agent = EstateAgent.query.filter(
+                or_(EstateAgent.name.ilike(f'{form.search_address.data}%'), EstateAgent.name.ilike(f'% {form.search_address.data}%'))
+            ).order_by(
+                EstateAgent.name.ilike(f'{form.search_address.data}%').desc(),
+                EstateAgent.name.ilike(f'%{form.search_address.data}%').desc(),
+                EstateAgent.name
+            ).first()
+            if agent:
+                location = agent.name
+                reviews = Review.query.filter_by(estate_agent_id=agent.id).all()
+
+        return render_template('search.html', title='Search', form=form, reviews=reviews, location=location, sort_form=sort_form)
+    
+    return render_template('review.html', title='Review', form=form)
+
+@app.route('/autocomplete-address')
+def autocomplete():
+    term = request.args.get('term', '')
+    ### code to search for both halls and houses
+    # addresses = Property.query.filter(Property.address.ilike(f'{term}%')).order_by(
+    #     Property.address.ilike(f'{term}%').desc(),
+    #     Property.address.ilike(f'%{term}%').desc()
+    # ).limit(10).all()
+    addresses = Property.query.join(House).filter(
+        or_(Property.address.ilike(f'{term}%'), Property.address.ilike(f'% {term}%'))
+    ).order_by(
+        Property.address.ilike(f'{term}%').desc(),
+        Property.address.ilike(f'%{term}%').desc(),
+        Property.address
+    ).limit(10).all()
+    address_list = [address.address for address in addresses]
+    return jsonify({'addresses': address_list})
+
+@app.route('/autocomplete-halls')
+def autocomplete_halls():
+    term = request.args.get('term', '')
+    if term.strip() == '':
+        properties = Property.query.join(Halls).order_by(Property.address).all()
+    else:
+        properties = Property.query.join(Halls).filter(
+            or_(Property.address.ilike(f'{term}%'), Property.address.ilike(f'% {term}%'))
+        ).order_by(
+            Property.address.ilike(f'{term}%').desc(),
+            Property.address.ilike(f'%{term}%').desc(),
+            Property.address
+        ).all()
+    address_list = [property.address for property in properties]
+    return jsonify({'addresses': address_list})
+    
+@app.route('/autocomplete-agent')
+def autocomplete_agent():
+    term = request.args.get('term', '')
+    if term.strip() == '':
+        agents = EstateAgent.query.order_by(EstateAgent.name).all()
+    else:
+        agents = EstateAgent.query.filter(
+            or_(EstateAgent.name.ilike(f'{term}%'), EstateAgent.name.ilike(f'% {term}%'))
+        ).order_by(
+            EstateAgent.name.ilike(f'{term}%').desc(),
+            EstateAgent.name.ilike(f'%{term}%').desc(),
+            EstateAgent.name
+        ).all()
+    agent_list = [agent.name for agent in agents]
+    return jsonify({'agents': agent_list})
 
 @app.route('/review/create', methods=['GET', 'POST'])
 def create():
@@ -88,4 +191,5 @@ def map():
             "avg_rating" : avg_rating,
             "rent" : rent,
         }
+
     return render_template('map.html', title='Map', property_location_data=property_location_data, google_maps_api_key=google_maps_api_key)

@@ -63,3 +63,10 @@ class CreateReviewForm(FlaskForm):
         except Exception as e:
             raise ValidationError(f"An error occurred: {e}")
         
+class SearchForm(FlaskForm):
+    search_type = RadioField("Search Type", choices=[('address','Address'),('halls','Halls'),('agent','Letting Agent')], validators=[DataRequired()], default='address')
+    search_address = StringField("Search", validators=[DataRequired()], id="search-input")
+    submit = SubmitField("Search")
+
+class SortForm(FlaskForm):
+    sort_by = SelectField("Sort By", choices=[('recent','Most Recent'),('oldest','Oldest'),('overall_high','Overall Rating (highest first)'),('overall_low','Overall Rating (lowest first)')], validators=[DataRequired()], default='recent', id="sort-input")

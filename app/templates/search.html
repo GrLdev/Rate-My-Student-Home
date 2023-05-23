@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+    <h1>Search results</h1>
+
+    <form method="post" action="" id="search-form">
+        {{ form.csrf_token }}
+        {{ form.search_type.label }} {{ form.search_type }}<br>
+        {{ form.search_address }}<br>
+    </form>
+    
+    {% if reviews %}
+        <form method="post" action="">
+            {{ sort_form.csrf_token }}
+            {{ sort_form.sort_by.label }} {{ sort_form.sort_by }}<br>
+        </form>
+        <h2>Reviews for {{ location }}</h2>
+        <div id="reviews-container">
+            {% for review in reviews %}
+                <div class="review">
+                    <p>Review date: {{ review.date }}</p>
+                    <p>Letting Agent: {{ review.estate_agent.name }}</p>
+                    <p>Overall Rating: {{ review.overall_rating }}</p>
+                    <p>Condition Rating: {{ review.condition_rating }}</p>
+                    <p>Security Rating: {{ review.security_rating }}</p>
+                    <p>Landlord Rating: {{ review.landlord_rating }}</p>
+                    <p>{{ review.comment }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No reviews found</p>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='js/sortby.js') }}"></script>
+    
+{% endblock content %}
