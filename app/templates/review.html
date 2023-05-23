@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
     <h1>Find a Review</h1>
-{#    TODO: Create Review Page#}
+
+    <form method="post" action="" id="search-form">
+        {{ form.csrf_token }}
+        {{ form.search_type.label }} {{ form.search_type }}<br>
+        {{ form.search_address }}
+    </form>
+
+    <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+
 {% endblock content %}

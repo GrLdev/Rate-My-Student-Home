@@ -21,6 +21,7 @@ class Property(db.Model):
     lat = db.Column(db.Float, nullable=False)
     lng = db.Column(db.Float, nullable=False)
     address = db.Column(db.String(256), nullable=False)
+    reviews = db.relationship('Review', backref='property', lazy=True)
 
 class House(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,6 +41,7 @@ class EstateAgent(db.Model):
     email = db.Column(db.String(256), nullable=False)
     phone = db.Column(db.String(256), nullable=False)
     website = db.Column(db.String(256), nullable=False)
+    reviews = db.relationship('Review', backref='estate_agent')
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
