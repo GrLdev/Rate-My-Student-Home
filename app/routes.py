@@ -27,12 +27,16 @@ def create():
         db.session.commit()
         if form.home_type.data == 'house':
             address = form.address_line_1.data + (', ' + form.address_line_2.data if form.address_line_2.data else '') + ', ' + form.city.data + ', ' + form.postcode.data
-            property = Property(lat=form.lat, lng=form.lng, address=address)
-            db.session.add(property)
-            db.session.commit()
-
-            house = House(property_id=property.id, bedrooms=form.bedrooms.data, bathrooms=form.bathrooms.data, rent=form.rent.data)
-            db.session.add(house)
+            existing_property = Property.query.filter_by(lat=form.lat, lng=form.lng).first()
+            
+            if existing_property:
+                property = existing_property
+            else:
+                property = Property(lat=form.lat, lng=form.lng, address=address)
+                db.session.add(property)
+                db.session.commit()
+                house = House(property_id=property.id, bedrooms=form.bedrooms.data, bathrooms=form.bathrooms.data, rent=form.rent.data)
+                db.session.add(house)
             review = Review(user_id=user.id, property_id=property.id, estate_agent_id=form.letting_agent.data, overall_rating=form.overall_rating.data, condition_rating=form.condition_rating.data, security_rating=form.security_rating.data, landlord_rating=form.landlord_rating.data, comment=form.review.data)
 
         elif form.home_type.data == 'halls':
