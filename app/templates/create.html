@@ -4,78 +4,54 @@
 
   <form method="post" action="">
       {{ form.csrf_token }}
-      {{ form.home_type.label }} {{ form.home_type }}<br>
 
-      <div id="addressFields">
-        {{ form.address_line_1.label }} {{ form.address_line_1 }}<br>
-        {{ form.address_line_2.label }} {{ form.address_line_2 }}<br>
-        {{ form.city.label }} {{ form.city }}<br>
-        {{ form.postcode.label }} {{ form.postcode }}<br>
+      <div id="location_step">
+        <h2>Your home</h2>
+        {{ form.home_type.label }} {{ form.home_type }}<br>
+
+        <div id="addressFields">
+          {{ form.address_line_1.label }} {{ form.address_line_1 }}<br>
+          {{ form.address_line_2.label }} {{ form.address_line_2 }}<br>
+          {{ form.city.label }} {{ form.city }}<br>
+          {{ form.postcode.label }} {{ form.postcode }}<br>
+        </div>
+
+        <div id="hallField">
+          {{ form.hall.label }} {{ form.hall }}<br>
+        </div>
+
+        <button type="button" id="location_step_button">Next Step</button><br>
       </div>
 
-      <div id="hallField">
-        {{ form.hall.label }} {{ form.hall }}<br>
+      <div id="review_step">
+        <h2>Your review</h2>
+        {{ form.overall_rating.label }} {{ form.overall_rating }}<br>
+        {{ form.condition_rating.label }} {{ form.condition_rating }}<br>
+        {{ form.security_rating.label }} {{ form.security_rating }}<br>
+        {{ form.landlord_rating.label }} {{ form.landlord_rating }}<br>
+
+        {{ form.rent.label }} {{ form.rent }}<br>
+        <div id="additionalFields">
+          {{ form.letting_agent.label }} {{ form.letting_agent }}<br>
+          {{ form.bedrooms.label }} {{ form.bedrooms }}<br>
+          {{ form.bathrooms.label }} {{ form.bathrooms }}<br>
+        </div>
+        {{ form.review.label }} {{ form.review }}<br>
+
+        <button type="button" id="review_step_back_button">Previous Step</button><button type="button" id="review_step_button">Next Step</button><br>
       </div>
 
-      {{ form.overall_rating.label }} {{ form.overall_rating }}<br>
-      {{ form.condition_rating.label }} {{ form.condition_rating }}<br>
-      {{ form.security_rating.label }} {{ form.security_rating }}<br>
-      {{ form.landlord_rating.label }} {{ form.landlord_rating }}<br>
-
-      {{ form.rent.label }} {{ form.rent }}<br>
-      <div id="additionalFields">
-        {{ form.letting_agent.label }} {{ form.letting_agent }}<br>
-        {{ form.bedrooms.label }} {{ form.bedrooms }}<br>
-        {{ form.bathrooms.label }} {{ form.bathrooms }}<br>
+      <div id="details_step">
+        <h2>Your details</h2>
+        {{ form.university.label }} {{ form.university }}<br>
+        {{ form.first_name.label }} {{ form.first_name }}<br>
+        {{ form.last_name.label }} {{ form.last_name }}<br>
+        {{ form.email.label }} {{ form.email }}<br>
+        {{ form.accepted_terms.label }} {{ form.accepted_terms }}<br>
+        <button type="button" id="details_step_back_button">Previous Step</button>{{ form.submit() }}
       </div>
-      {{ form.review.label }} {{ form.review }}<br>
-
-      {{ form.university.label }} {{ form.university }}<br>
-      {{ form.first_name.label }} {{ form.first_name }}<br>
-      {{ form.last_name.label }} {{ form.last_name }}<br>
-      {{ form.email.label }} {{ form.email }}<br>
-      {{ form.accepted_terms.label }} {{ form.accepted_terms }}<br>
-      {{ form.submit() }}
   </form>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var homeTypeField = document.querySelector('input[name="home_type"]:checked');
-      var hallField = document.getElementById('hallField');
-      var addressFields = document.getElementById('addressFields');
-      var additionalFields = document.getElementById('additionalFields');
-      
-      function toggleFields() {
-        if (homeTypeField.value === 'house') {
-          addressFields.style.display = 'block';
-          hallField.style.display = 'none';
-          additionalFields.style.display = 'block';
-          document.getElementById('rent').required = true;
-          document.getElementById('address_line_1').required = true;
-          document.getElementById('city').required = true;
-          document.getElementById('postcode').required = true;
-        } else {
-          addressFields.style.display = 'none';
-          hallField.style.display = 'block';
-          additionalFields.style.display = 'none';
-          document.getElementById('rent').required = false;
-          document.getElementById('address_line_1').required = false;
-          document.getElementById('city').required = false;
-          document.getElementById('postcode').required = false;
-        }
-      }
-      
-      var homeTypeRadios = document.querySelectorAll('input[name="home_type"]');
-      for (var i = 0; i < homeTypeRadios.length; i++) {
-        homeTypeRadios[i].addEventListener('change', function() {
-          homeTypeField = document.querySelector('input[name="home_type"]:checked');
-          toggleFields();
-        });
-      }
-      
-      toggleFields(); // Initially toggle the fields based on the selected value
-    });
-  </script>
+  <script src="{{ url_for('static', filename='js/createpage.js') }}"></script>
 
-{#    TODO: Add view creation page#}
 {% endblock content %}
