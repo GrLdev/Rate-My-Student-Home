@@ -13,11 +13,13 @@
     </form>
     
     {% if reviews %}
+    {% set avg_rating = (reviews | map(attribute='overall_rating') | sum / reviews | length) | round(2) %}
         <form method="post" action="">
             {{ sort_form.csrf_token }}
             {{ sort_form.sort_by.label }} {{ sort_form.sort_by }}<br>
         </form>
         <h2>Reviews for {{ location }}</h2>
+        <p>Average rating: {{ avg_rating }}</p>
         <div id="reviews-container">
             {% for review in reviews %}
                 <div class="review">
