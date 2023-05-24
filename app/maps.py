@@ -15,11 +15,11 @@ def get_coords(formatted_address):
             lng = result["geometry"]["location"]["lng"]
 
             in_cardiff = any("Cardiff" in address_component["long_name"] for address_component in result["address_components"])
-            is_street_address = "street_address" in result["types"]
+            is_street_address_or_premise = "street_address" in result["types"] or "premise" in result["types"]
 
             if not in_cardiff:
                 raise ValidationError(f"Address is not in Cardiff: {formatted_address}")
-            if not is_street_address:
+            if not is_street_address_or_premise:
                 raise ValidationError(f"Address is not a street address: {formatted_address}")
             return lat, lng
         
