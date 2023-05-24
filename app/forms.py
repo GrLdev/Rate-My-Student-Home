@@ -36,7 +36,7 @@ class CreateReviewForm(FlaskForm):
     condition_rating = IntegerRangeField("Condition Rating", default=3 , validators=[DataRequired(), NumberRange(min=1, max=5)])
     security_rating = IntegerRangeField("Security Rating", default=3 , validators=[DataRequired(), NumberRange(min=1, max=5)])
     landlord_rating = IntegerRangeField("Landlord Rating", default=3 , validators=[DataRequired(), NumberRange(min=1, max=5)])
-    letting_agent = SelectField("Letting Agent", choices=[('none','None/Other')] + [(agent.id, agent.name) for agent in EstateAgent.query.all()])
+    letting_agent = SelectField("Letting Agent", default='none' ,choices=sorted([('none', 'None/Other')] + [(agent.id, agent.name) for agent in EstateAgent.query.all()], key=lambda x: x[1]))
     rent = PriceField("Rent £", validators=[DataRequired(), NumberRange(min=0, max=10000)])
     bedrooms = IntegerField("Bedrooms", default=1 , validators=[DataRequired(), NumberRange(min=1, max=10)])
     bathrooms = IntegerField("Bathrooms", default=1 , validators=[DataRequired(), NumberRange(min=1, max=10)])
