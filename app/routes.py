@@ -174,6 +174,7 @@ def map():
             for review in reviews:
                 avg_rating += review.overall_rating
             avg_rating /= len(reviews)
+            avg_rating = round(avg_rating, 2)
 
         houses = House.query.filter_by(property_id=property.id).all()
         halls = Halls.query.filter_by(property_id=property.id).all()
