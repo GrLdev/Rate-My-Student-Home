@@ -1,5 +1,5 @@
 from app import app, db
-from flask import render_template, url_for, redirect, request, jsonify
+from flask import render_template, url_for, redirect, request, jsonify, flash
 from app.forms import CreateReviewForm, SearchForm, SortForm
 from app.models import Review, Property, House, Halls, EstateAgent, User
 from secret_keys import google_maps_api_key
@@ -151,6 +151,9 @@ def create():
         db.session.commit()
 
         return render_template('confirm.html', title='Confirm')
+    
+    for error in form.errors:
+        flash(error, 'danger')
     return render_template('create.html', title='Create Review', form=form)
 
 @app.route('/help-center')
