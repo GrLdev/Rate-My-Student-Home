@@ -18,14 +18,14 @@ def get_coords(formatted_address):
             is_street_address_or_premise = "street_address" in result["types"] or "premise" in result["types"]
 
             if not in_cardiff:
-                raise ValidationError(f"Address is not in Cardiff: {formatted_address}")
+                raise Exception(f"Address is not in Cardiff: {formatted_address}")
             if not is_street_address_or_premise:
-                raise ValidationError(f"Address is not a street address: {formatted_address}")
+                raise Exception(f"Address is not a street address: {formatted_address}")
             return lat, lng
         
         else:
-            raise ValidationError(f"Geocoding failed: {response['status']}")
+            raise Exception(f"Geocoding failed: {response['status']}")
 
     except Exception as e:
-        raise ValidationError(f"An error occurred: {e}")
+        return f"An error occurred: {str(e)}"
 

@@ -30,8 +30,38 @@
             <li class="nav-crumb"><a class="secondaryRed" href="/help-center">Help</a></li>
         </ul>
     </nav>
-
 </header>
+
+<div id="flashbar">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="alert-message {{ category }}">{{ message }} <button onclick="hideFlash()">✖</button></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</div>
+
+<script>
+    function hideFlash() {
+        document.querySelector(".flashes").style.display = "none";
+    }
+</script>
+<script>
+    setTimeout(() => {
+        const flashes = document.querySelector("#flashbar");
+        if (flashes) {
+            /* Add the fade-out class to trigger the CSS transition */
+            flashes.classList.add("fade-out");
+            /* Remove the flashes element from the DOM once the transition is complete */
+            setTimeout(() => {
+                flashes.remove();
+            }, 1800);
+        }
+    }, 1800);
+</script>
 
 <div id="content">
     {% block content %}
