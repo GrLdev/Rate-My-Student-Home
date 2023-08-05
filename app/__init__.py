@@ -5,9 +5,14 @@ app = Flask(__name__)
 app.app_context().push()
 app.config['SECRET_KEY'] = config_secret_key
 
-# database
+# database (used SingletonThreadPool to handle concurrent requests to the database in update_review_rent())
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.pool import SingletonThreadPool
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-db = SQLAlchemy(app)
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], poolclass=SingletonThreadPool)
+
+db = SQLAlchemy(app, engine_options={'pool_pre_ping': True})
 
 from app import routes, models

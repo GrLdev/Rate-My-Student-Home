@@ -41,6 +41,7 @@ def review():
             if property:
                 location = property.address
                 reviews = Review.query.filter_by(property_id=property.id).all()
+                current_rent = property.house[0].rent
 
         elif search_type == "halls":
             property = Property.query.join(Halls).filter(
@@ -53,6 +54,7 @@ def review():
             if property:
                 location = property.address
                 reviews = Review.query.filter_by(property_id=property.id).all()
+                current_rent = property.halls[0].rent
 
         elif search_type == "agent":
             agent = EstateAgent.query.filter(
@@ -65,8 +67,9 @@ def review():
             if agent:
                 location = agent.name
                 reviews = Review.query.filter_by(estate_agent_id=agent.id).all()
+                current_rent = None
 
-        return render_template('search.html', title='Search', form=form, reviews=reviews, location=location, sort_form=sort_form)
+        return render_template('search.html', title='Search', form=form, reviews=reviews, location=location, sort_form=sort_form, current_rent=current_rent)
     
     return render_template('review.html', title='Review', form=form)
 
@@ -128,6 +131,7 @@ def create():
         user = User(name=fullname, email=form.email.data, university=form.university.data)
         db.session.add(user)
         db.session.commit()
+
         if form.home_type.data == 'house':
             address = form.address_line_1.data + (', ' + form.address_line_2.data if form.address_line_2.data else '') + ', ' + form.city.data + ', ' + form.postcode.data
             existing_property = Property.query.filter_by(lat=form.lat, lng=form.lng).first()
@@ -140,12 +144,12 @@ def create():
                 db.session.commit()
                 house = House(property_id=property.id, bedrooms=form.bedrooms.data, bathrooms=form.bathrooms.data, rent=form.rent.data)
                 db.session.add(house)
-            review = Review(user_id=user.id, property_id=property.id, estate_agent_id=form.letting_agent.data, overall_rating=form.overall_rating.data, condition_rating=form.condition_rating.data, security_rating=form.security_rating.data, landlord_rating=form.landlord_rating.data, comment=form.review.data)
-
+            review = Review(user_id=user.id, property_id=property.id, estate_agent_id=form.letting_agent.data, overall_rating=form.overall_rating.data, condition_rating=form.condition_rating.data, security_rating=form.security_rating.data, landlord_rating=form.landlord_rating.data, comment=form.review.data, rent=form.rent.data)
+            
         elif form.home_type.data == 'halls':
             hall = Halls.query.filter_by(id=form.hall.data).first()
             property_id = hall.property_id
-            review = Review(user_id=user.id, property_id=property_id, estate_agent_id="none", overall_rating=form.overall_rating.data, condition_rating=form.condition_rating.data, security_rating=form.security_rating.data, landlord_rating=form.landlord_rating.data, comment=form.review.data)
+            review = Review(user_id=user.id, property_id=property_id, estate_agent_id="none", overall_rating=form.overall_rating.data, condition_rating=form.condition_rating.data, security_rating=form.security_rating.data, landlord_rating=form.landlord_rating.data, comment=form.review.data, rent=form.rent.data)
 
         db.session.add(review)
         db.session.commit()
