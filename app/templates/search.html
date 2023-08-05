@@ -22,7 +22,7 @@
         <p>Average rating: {{ avg_rating }}</p>
         <div id="reviews-container">
             {% for review in reviews %}
-                <div class="review">
+                <div class="review" data-review-date="{{ review.date }}" data-review-overall-rating="{{ review.overall_rating }}">
                     <p>Review date: {{ review.date }}</p>
                     <p>Letting Agent: {{ review.estate_agent.name }}</p>
                     <p>Overall Rating: {{ review.overall_rating }}</p>

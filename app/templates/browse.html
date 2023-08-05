@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Browse</h1>
+
+<form method="post" action="" id="search-form">
+    {{ browse_type_form.csrf_token }}
+    {{ browse_type_form.browse_type.label }} {{ browse_type_form.browse_type }}<br>
+</form>
+
+{% endblock content %}
