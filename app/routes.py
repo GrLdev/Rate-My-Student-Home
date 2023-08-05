@@ -41,7 +41,7 @@ def review():
             if property:
                 location = property.address
                 reviews = Review.query.filter_by(property_id=property.id).all()
-                current_rent = property.house[0].rent
+                current_rent = property.associated_house[0].rent
 
         elif search_type == "halls":
             property = Property.query.join(Halls).filter(
@@ -54,7 +54,7 @@ def review():
             if property:
                 location = property.address
                 reviews = Review.query.filter_by(property_id=property.id).all()
-                current_rent = property.halls[0].rent
+                current_rent = property.associated_halls[0].rent
 
         elif search_type == "agent":
             agent = EstateAgent.query.filter(

@@ -25,8 +25,8 @@ class Property(db.Model):
     lng = db.Column(db.Float, nullable=False)
     address = db.Column(db.String(256), nullable=False)
     reviews = db.relationship('Review', backref='property', lazy=True)
-    house = db.relationship('House', backref='property', lazy=True)
-    halls = db.relationship('Halls', backref='property', lazy=True)
+    associated_house = db.relationship('House', backref='property', lazy=True)
+    associated_halls = db.relationship('Halls', backref='property', lazy=True)
 
 class House(db.Model):
     id = db.Column(db.Integer, primary_key=True)
