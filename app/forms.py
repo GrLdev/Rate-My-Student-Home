@@ -77,3 +77,20 @@ class SearchForm(FlaskForm):
 
 class SortForm(FlaskForm):
     sort_by = SelectField("Sort By", choices=[('recent','Most Recent'),('oldest','Oldest'),('overall_high','Overall Rating (highest first)'),('overall_low','Overall Rating (lowest first)')], validators=[DataRequired()], default='recent', id="sort-input")
+
+class AdminLoginForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
+    password = StringField("Password", validators=[DataRequired()])
+    submit = SubmitField("Login")
+
+class ReportForm(FlaskForm):
+    university = RadioField("Which university do you belong to?", choices=[(None,'None'),('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
+    first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
+    last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
+    email = StringField("Email", validators=[DataRequired()])
+    comment = TextAreaField("Comment", validators=[DataRequired(), Length(min=10, max=1000)])
+    submit = SubmitField("Report Review")
+
+class RemoveReviewForm(FlaskForm):
+    action = SelectField('Action', choices=[('remove', 'Remove'), ('ignore', 'Ignore')])
+    submit = SubmitField('Handle')

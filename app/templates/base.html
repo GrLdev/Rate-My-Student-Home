@@ -28,6 +28,10 @@
             <li class="nav-crumb"><a class="secondaryRed" href="/map">Map View</a></li>
             <li class="nav-crumb"><a class="secondaryRed" href="/about">About Us</a></li>
             <li class="nav-crumb"><a class="secondaryRed" href="/help-center">Help</a></li>
+            {% if current_user.is_authenticated %}
+                <li class="nav-crumb"><a class="secondaryRed" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
+                <li class="nav-crumb"><a class="secondaryRed" href="{{ url_for('admin_logout') }}">Logout</a></li>
+            {% endif %}
         </ul>
     </nav>
 </header>

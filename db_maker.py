@@ -1,6 +1,6 @@
 from datetime import datetime
 from app import db, app
-from app.models import Review, Property, House, Halls, EstateAgent, User
+from app.models import Review, Property, House, Halls, EstateAgent, User, Admin
 
 with app.app_context():
     db.drop_all()
@@ -623,10 +623,17 @@ with app.app_context():
         university="University of XYZ"
     )
 
+    admin = Admin(
+        name="admin",
+        email="admin@example.com",
+        password="pbkdf2:sha256:600000$Weyy3Frj6jb0BztH$a05649d5da77f0ed8e523e845c1414ad67862be132c5bf5b84d8026b0d01391e" #"password"
+    )
+
     db.session.add_all([review1, review2, 
                         property1, property2, property3, property4, property5, property6, property7, property8, property9, property10, property11, property12, property13, property14, property15, property16, property17, property18, property19, property20,
                         house1, house2, 
                         talybont_south, senghennydd_court, aberconway_hall, aberdare_hall, adam_street_gardens, cartwright_court, clodien_house, colum_hall, gordon_hall, hodge_hall, roy_jenkins_hall, senghennydd_hall, student_houses_colum, student_houses_village, talybont_court, talybont_gate, talybont_north, university_hall,
                         cps_roath, cps_cathays, john_winter, cardiff_student_letting, savills, kingstons, jeffreyross, uniek_residential, horizon_properties, james_douglas, the_living_room, velvet_chase, harry_harper, property_direct, allen_and_harris, albany_property_services, jupiter_property, darlows_albany_road, moginie_james, martin_and_co, let2, interlet, amos_estate, isla_alexander, lettings_angels, FourLet, david_ricketts, jnr, st_michael_angel, peter_mulcahy, ashi, umbrella_homes, abraham_estates, peter_alan, hensons_homes, prestige, bah_properties, imperial_services, providing_properties, keylet, unihomes, student_cribs, unite_students, crm_students, collegiate, herestudents, yugo, hellostudent, vita_student, prime_student_living, thisisfresh,
-                        user1, user2])
+                        user1, user2,
+                        admin])
     db.session.commit()
