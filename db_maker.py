@@ -15,7 +15,8 @@ with app.app_context():
         security_rating=3,
         landlord_rating=4,
         date=datetime.now(),
-        comment="Great experience!"
+        comment="Great experience!",
+        rent=1500
     )
 
     review2 = Review(
@@ -27,7 +28,8 @@ with app.app_context():
         security_rating=2,
         landlord_rating=3,
         date=datetime.now(),
-        comment="Could be better."
+        comment="Could be better.",
+        rent=2000
     )
 
     property1 = Property(
