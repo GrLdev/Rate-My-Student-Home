@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Browse by {{ browse_type }}</h1>
+
+<form method="post" action="">
+    {{ browse_type_form.csrf_token }}
+    {{ browse_type_form.browse_type.label }} {{ browse_type_form.browse_type }}<br>
+</form>
+
+{% if reviews %}
+    <form method="post" action="">
+        {{ sort_by.csrf_token }}
+        {{ sort_by.sort_by.label }} {{ sort_by.sort_by }}<br>
+    </form>
+
+    {% if browse_type in ["house", "halls", "landlord"] %}
+        <form method="post" action="">
+            {{ filter_by_rating.csrf_token }}
+            {{ filter_by_rating.filter_by.label }} {{ filter_by_rating.filter_by }}<br>
+        </form>
+    {% endif %}
+    {% if browse_type in ["house", "halls"] %}
+        <form method="post" action="">
+            {{ filter_by_rent.csrf_token }}
+            {{ filter_by_rent.rent_min.label }} {{ filter_by_rent.rent_min }}<br>
+            {{ filter_by_rent.rent_max.label }} {{ filter_by_rent.rent_max }}<br>
+        </form>
+    {% endif %}
+    {% if browse_type == "house" %}
+        <form method="post" action="">
+            {{ filter_by_bedrooms.csrf_token }}
+            {{ filter_by_bedrooms.bedrooms_min.label }} {{ filter_by_bedrooms.bedrooms_min }}<br>
+            {{ filter_by_bedrooms.bedrooms_max.label }} {{ filter_by_bedrooms.bedrooms_max }}<br>
+        </form>
+        <form method="post" action="">
+            {{ filter_by_bathrooms.csrf_token }}
+            {{ filter_by_bathrooms.bathrooms_min.label }} {{ filter_by_bathrooms.bathrooms_min }}<br>
+            {{ filter_by_bathrooms.bathrooms_max.label }} {{ filter_by_bathrooms.bathrooms_max }}<br>
+        </form>
+    {% endif %}
+    
+    <div id="reviews-container">
+        {% for review in reviews %}
+            <div class="review" data-review-date="{{ review.date }}" data-review-overall-rating="{{ review.overall_rating }}" data-rent="{% if browse_type == 'house' %}{{ review.property.house[0].rent }}{% elif browse_type == 'halls' %}{{ review.property.halls[0].rent }}{% endif %}" data-bedrooms="{% if browse_type == 'house' %}{{ review.property.house[0].bedrooms }}{% endif %}" data-bathrooms="{% if browse_type == 'house' %}{{ review.property.house[0].bathrooms }}{% endif %}">
+                {% if browse_type == "house" %}
+                    <p>Address: {{ review.property.address }}</p>
+                    <p>Review date: {{ review.date }}</p>
+                    <p>Rent: {{ review.property.house[0].rent }}</p>
+                    <p>Bedrooms: {{ review.property.house[0].bedrooms }}</p>
+                    <p>Bathrooms: {{ review.property.house[0].bathrooms }}</p>
+                    <p>Letting Agent: {{ review.estate_agent.name }}</p>
+                    <p>Overall Rating: {{ review.overall_rating }}</p>
+                    <p>Condition Rating: {{ review.condition_rating }}</p>
+                    <p>Security Rating: {{ review.security_rating }}</p>
+                    <p>Landlord Rating: {{ review.landlord_rating }}</p>
+                    <p>{{ review.comment }}</p>
+
+                {% elif browse_type == "halls" %}
+                    <p>Address: {{ review.property.address }}</p>
+                    <p>Review date: {{ review.date }}</p>
+                    <p>Rent: {{ review.property.halls[0].rent }}</p>
+                    <p>Overall Rating: {{ review.overall_rating }}</p>
+                    <p>Condition Rating: {{ review.condition_rating }}</p>
+                    <p>Security Rating: {{ review.security_rating }}</p>
+                    <p>Landlord Rating: {{ review.landlord_rating }}</p>
+                    <p>{{ review.comment }}</p>
+
+                {% elif browse_type == "landlord" %}
+                    <p>Landlord: {{ review.estate_agent.name }}</p>
+                    <p>Review date: {{ review.date }}</p>
+                    <p>Landlord Rating: {{ review.landlord_rating }}</p>
+                    <p>Overall Rating: {{ review.overall_rating }}</p>
+                    <p>Condition Rating: {{ review.condition_rating }}</p>
+                    <p>Security Rating: {{ review.security_rating }}</p>
+                    <p>{{ review.comment }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No reviews found</p>
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='js/sortby.js') }}"></script>
+<script src="{{ url_for('static', filename='js/filterby.js') }}"></script>
+
+{% endblock content %}

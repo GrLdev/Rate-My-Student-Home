@@ -16,7 +16,6 @@ class PriceField(DecimalField):
         else:
             self.data = None
 
-
 class CreateReviewForm(FlaskForm):
     # place_id = None
     lat = None
@@ -94,3 +93,27 @@ class ReportForm(FlaskForm):
 class RemoveReviewForm(FlaskForm):
     action = SelectField('Action', choices=[('remove', 'Remove'), ('ignore', 'Ignore')])
     submit = SubmitField('Handle')
+    
+class BrowseTypeForm(FlaskForm):
+    browse_type = SelectField("Filter By", choices=[('house','House'),('halls','Halls'),('landlord','Landlord')], validators=[DataRequired()], default='house', render_kw={"onchange": "this.form.submit()"})
+
+class SortByPropertyForm(FlaskForm):
+    sort_by = SelectField("Sort By", choices=[('overall_high','Overall Rating (highest first)'),('overall_low','Overall Rating (lowest first)'),('recent','Most Recent'),('oldest','Oldest'),('rent_high','Rent (highest first)'),('rent_low','Rent (lowest first)')], validators=[DataRequired()], default='overall_high', id="sort-input")
+
+class SortByLandlordForm(FlaskForm):
+    sort_by = SelectField("Sort By", choices=[('overall_high','Overall Rating (highest first)'),('overall_low','Overall Rating (lowest first)'),('recent','Most Recent'),('oldest','Oldest')], validators=[DataRequired()], default='overall_high', id="sort-input")
+
+class FilterByRatingForm(FlaskForm):
+    filter_by = SelectField("Overall rating above", choices=[(5,'5'),(4,'4'),(3,'3'),(2,'2'),(1,'1')], validators=[DataRequired()], default='overall_5', id="filter-input")
+
+class FilterByRentForm(FlaskForm):
+    rent_min = PriceField("Min Rent £", validators=[DataRequired(), NumberRange(min=0, max=10000)], id="rent-min-input")
+    rent_max = PriceField("Max Rent £", validators=[DataRequired(), NumberRange(min=0, max=10000)], id="rent-max-input")
+
+class FilterByBedroomsForm(FlaskForm):
+    bedrooms_min = SelectField("Min Bedrooms", choices=[('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7'),('8','8'),('9','9'),('10+','10+')], validators=[DataRequired()], default='1', id="bedrooms-min-input")
+    bedrooms_max = SelectField("Max Bedrooms", choices=[('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7'),('8','8'),('9','9'),('10+','10+')], validators=[DataRequired()], default='10+', id="bedrooms-max-input")
+
+class FilterByBathroomsForm(FlaskForm):
+    bathrooms_min = SelectField("Min Bathrooms", choices=[('1','1'),('2','2'),('3','3'),('4','4'),('5','5')], validators=[DataRequired()], default='1', id="bathrooms-min-input")
+    bathrooms_max = SelectField("Max Bathrooms", choices=[('1','1'),('2','2'),('3','3'),('4','4'),('5','5')], validators=[DataRequired()], default='10+', id="bathrooms-max-input")

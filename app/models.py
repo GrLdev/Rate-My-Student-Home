@@ -36,11 +36,13 @@ class House(db.Model):
     bedrooms = db.Column(db.Integer, nullable=False)
     bathrooms = db.Column(db.Integer, nullable=False)
     rent = db.Column(db.Integer, nullable=False)
+    property = db.relationship('Property', backref='house', lazy=True, uselist=False)
 
 class Halls(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
     rent = db.Column(db.Integer, nullable=False)
+    property = db.relationship('Property', backref='halls', lazy=True, uselist=False)
 
 class EstateAgent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
