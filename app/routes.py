@@ -1,9 +1,10 @@
 from app import app, db
 from flask import render_template, url_for, redirect, request, jsonify, flash
+from app.models import Review, Property, House, Halls, EstateAgent, User, datetime
 from app.forms import CreateReviewForm, SearchForm, SortForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm
-from app.models import Review, Property, House, Halls, EstateAgent, User
 from secret_keys import google_maps_api_key
 from sqlalchemy import or_
+from datetime import timedelta
 
 @app.route('/')
 def home():
@@ -127,11 +128,21 @@ def autocomplete_agent():
 def create():
     form = CreateReviewForm()
     if form.validate_on_submit():
-        fullname = form.first_name.data + ' ' + form.last_name.data
-        user = User(name=fullname, email=form.email.data, university=form.university.data)
-        db.session.add(user)
-        db.session.commit()
+        existing_user = User.query.filter_by(email=form.email.data).first()
 
+        if not existing_user:
+            fullname = form.first_name.data + ' ' + form.last_name.data
+            user = User(name=fullname, email=form.email.data, university=form.university.data)
+            db.session.add(user)
+            db.session.commit()
+        else:
+            user = existing_user
+            reviews = Review.query.filter_by(user_id=user.id).all()
+            for review in reviews:
+                if datetime.now() - review.date < timedelta(minutes=1):        # change to a longer time period
+                    flash('You have already submitted a review this week/month/year', 'danger')
+                    return redirect(url_for('create'))
+            
         if form.home_type.data == 'house':
             address = form.address_line_1.data + (', ' + form.address_line_2.data if form.address_line_2.data else '') + ', ' + form.city.data + ', ' + form.postcode.data
             existing_property = Property.query.filter_by(lat=form.lat, lng=form.lng).first()
