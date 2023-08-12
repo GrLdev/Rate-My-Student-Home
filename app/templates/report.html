@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Report review</h1>
+
+<form method="post" action="">
+    {{ form.csrf_token }}
+    {{ form.university.label }} {{ form.university }}<br>
+    {{ form.first_name.label }} {{ form.first_name }}<br>
+    {{ form.last_name.label }} {{ form.last_name }}<br>
+    {{ form.email.label }} {{ form.email }}<br>
+    {{ form.comment.label }} {{ form.comment }}<br>
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock content %}

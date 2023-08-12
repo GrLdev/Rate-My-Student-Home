@@ -31,6 +31,7 @@
                     <p>Security Rating: {{ review.security_rating }}</p>
                     <p>Landlord Rating: {{ review.landlord_rating }}</p>
                     <p>{{ review.comment }}</p>
+                    <a href="{{ url_for('report',review_id=review.id) }}">Report</a>
                     <p>Rent: {{ review.rent }}</p>
                 </div>
             {% endfor %}

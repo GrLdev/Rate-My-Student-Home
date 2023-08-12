@@ -1,9 +1,11 @@
 from app import app, db
 from flask import render_template, url_for, redirect, request, jsonify, flash
-from app.models import Review, Property, House, Halls, EstateAgent, User, datetime
-from app.forms import CreateReviewForm, SearchForm, SortForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm
+from flask_login import current_user, login_user, logout_user, login_required
 from secret_keys import google_maps_api_key
 from sqlalchemy import or_
+from werkzeug.security import check_password_hash, generate_password_hash
+from app.models import Review, Property, House, Halls, EstateAgent, User, Admin, Report, datetime
+from app.forms import CreateReviewForm, SearchForm, SortForm, AdminLoginForm, ReportForm, RemoveReviewForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm
 from datetime import timedelta
 
 @app.route('/')
@@ -41,7 +43,7 @@ def review():
             ).first()
             if property:
                 location = property.address
-                reviews = Review.query.filter_by(property_id=property.id).all()
+                reviews = Review.query.filter_by(property_id=property.id, removed=False).all()
                 current_rent = property.associated_house[0].rent
 
         elif search_type == "halls":
@@ -54,7 +56,7 @@ def review():
             ).first()
             if property:
                 location = property.address
-                reviews = Review.query.filter_by(property_id=property.id).all()
+                reviews = Review.query.filter_by(property_id=property.id, removed=False).all()
                 current_rent = property.associated_halls[0].rent
 
         elif search_type == "agent":
@@ -67,7 +69,7 @@ def review():
             ).first()
             if agent:
                 location = agent.name
-                reviews = Review.query.filter_by(estate_agent_id=agent.id).all()
+                reviews = Review.query.filter_by(property_id=property.id, removed=False).all()
                 current_rent = None
 
         return render_template('search.html', title='Search', form=form, reviews=reviews, location=location, sort_form=sort_form, current_rent=current_rent)
@@ -186,7 +188,7 @@ def map():
     
     for property in properties:
 
-        reviews = Review.query.filter_by(property_id=property.id).all()
+        reviews = Review.query.filter_by(property_id=property.id, removed=False).all()
         avg_rating = 0
         if len(reviews) != 0:
             for review in reviews:
@@ -212,6 +214,69 @@ def map():
         }
 
     return render_template('map.html', title='Map', property_location_data=property_location_data, google_maps_api_key=google_maps_api_key)
+
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('admin_dashboard'))
+    
+    form = AdminLoginForm()
+    if form.validate_on_submit():
+        admin = Admin.query.filter_by(email=form.email.data).first()
+        if admin and check_password_hash(admin.password, form.password.data):
+            login_user(admin)
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    
+    return render_template('admin-login.html', title='Admin Login', form=form)
+
+@app.route('/admin-dashboard', methods=['GET', 'POST'])
+@login_required
+def admin_dashboard():
+    form = RemoveReviewForm()
+    unhandled_reports = Report.query.filter_by(handled=False).all()
+    handled_reports = Report.query.filter_by(handled=True).all()
+    
+    if form.validate_on_submit():
+        report = Report.query.filter_by(id=request.form["reported"]).first_or_404()
+        review = Review.query.filter_by(id=report.review_id).first_or_404()
+
+        if request.form["action"] == "remove":
+            review.removed = True
+            report.handled = True
+            flash('Review removed', 'success')
+        elif request.form["action"] == "ignore":
+            report.handled = True
+            flash('Review ignored', 'success')
+        db.session.commit()
+        return redirect(url_for('admin_dashboard'))
+    return render_template('admin-dashboard.html', title='Admin Dashboard', unhandled_reports=unhandled_reports, handled_reports=handled_reports, form=form)
+
+@app.route('/admin-logout')
+@login_required
+def admin_logout():
+    logout_user()
+    return redirect(url_for('admin_login'))
+
+@app.route('/report/<int:review_id>', methods=['GET', 'POST'])
+def report(review_id):
+    form = ReportForm()
+    if Review.query.filter_by(id=review_id, removed=False).first():
+        if form.validate_on_submit():
+            fullname = form.first_name.data + ' ' + form.last_name.data
+            user = User(name=fullname, email=form.email.data, university=form.university.data)
+            db.session.add(user)
+            db.session.commit()
+            report = Report(review_id=review_id, reporter_id=user.id, comment=form.comment.data)
+            db.session.add(report)
+            db.session.commit()
+            flash('Report submitted successfully', 'success')
+            return redirect(url_for('home'))
+    else:
+        flash('Review does not exist', 'danger')
+        return redirect(url_for('home'))
+    return render_template('report.html', title='Report', form=form)
 
 @app.route('/browse', methods=['GET', 'POST'])
 @app.route('/browse/', methods=['GET', 'POST'])

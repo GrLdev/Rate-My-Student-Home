@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Admin login</h1>
+
+<form method="post" action="">
+    {{ form.csrf_token }}
+    {{ form.email.label }} {{ form.email }}<br>
+    {{ form.password.label }} {{ form.password }}<br>
+    {{ form.submit() }}
+</form>
+
+{% endblock content %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Admin dashboard</h1>
+
+{% if unhandled_reports %}
+    <h2>Unhandled reports</h2>
+    <table>
+        <tr>
+            <th>Report ID</th>
+            <th>Review</th>
+            <th>Address</th>
+            <th>Reporter Name</th>
+            <th>Reporter University</th>
+            <th>Reporter Email</th>
+            <th>Reporter Comment</th>
+            <th>Handled</th>
+            <th>Handle</th>
+        </tr>
+        {% for report in unhandled_reports %}
+            <tr>
+                <td>{{ report.id }}</td>
+                <td>{{ report.review.comment }}</td>
+                <td>{{ report.review.property.address }}</td>
+                <td>{{ report.user.name }}</td>
+                <td>{{ report.user.university }}</td>
+                <td>{{ report.user.email }}</td>
+                <td>{{ report.comment }}</td>
+                <td>{{ report.handled }}</td>
+                <td>
+                    <form method="POST" action="">
+                        <input type="hidden" id="reported" name="reported" value="{{ report.id }}">
+                        {{ form.csrf_token }}
+                        {{ form.action.label }} {{ form.action }} 
+                        {{ form.submit() }}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>No unhandled reports</h2>
+{% endif %}
+
+{% if handled_reports %}
+    <h2>Handled reports</h2>
+    <table>
+        <tr>
+            <th>Report ID</th>
+            <th>Review</th>
+            <th>Address</th>
+            <th>Reporter Name</th>
+            <th>Reporter University</th>
+            <th>Reporter Email</th>
+            <th>Reporter Comment</th>
+            <th>Handled</th>
+        </tr>
+        {% for report in handled_reports %}
+            <tr>
+                <td>{{ report.id }}</td>
+                <td>{{ report.review.comment }}</td>
+                <td>{{ report.review.property.address }}</td>
+                <td>{{ report.user.name }}</td>
+                <td>{{ report.user.university }}</td>
+                <td>{{ report.user.email }}</td>
+                <td>{{ report.comment }}</td>
+                <td>{{ report.handled }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h1>No reports</h1>
+{% endif %}
+
+{% endblock content %}
