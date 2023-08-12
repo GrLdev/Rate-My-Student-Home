@@ -19,7 +19,8 @@
             {{ sort_form.sort_by.label }} {{ sort_form.sort_by }}<br>
         </form>
         <h2>Reviews for {{ location }}</h2>
-        <p>Average rating: {{ avg_rating }}</p>
+        <h3>Average rating: {{ avg_rating }}</h3>
+        <h3>Current rent: {{ current_rent }}</h3>
         <div id="reviews-container">
             {% for review in reviews %}
                 <div class="review">
@@ -31,6 +32,7 @@
                     <p>Landlord Rating: {{ review.landlord_rating }}</p>
                     <p>{{ review.comment }}</p>
                     <a href="{{ url_for('report',review_id=review.id) }}">Report</a>
+                    <p>Rent: {{ review.rent }}</p>
                 </div>
             {% endfor %}
         </div>
