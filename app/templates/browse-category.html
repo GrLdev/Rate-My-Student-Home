@@ -42,13 +42,13 @@
     
     <div id="reviews-container">
         {% for review in reviews %}
-            <div class="review" data-review-date="{{ review.date }}" data-review-overall-rating="{{ review.overall_rating }}" data-rent="{% if browse_type == 'house' %}{{ review.property.house[0].rent }}{% elif browse_type == 'halls' %}{{ review.property.halls[0].rent }}{% endif %}" data-bedrooms="{% if browse_type == 'house' %}{{ review.property.house[0].bedrooms }}{% endif %}" data-bathrooms="{% if browse_type == 'house' %}{{ review.property.house[0].bathrooms }}{% endif %}">
+            <div class="review" data-review-date="{{ review.date }}" data-review-overall-rating="{{ review.overall_rating }}" data-rent="{% if browse_type == 'house' %}{{ review.property.associated_house[0].rent }}{% elif browse_type == 'halls' %}{{ review.property.associated_halls[0].rent }}{% endif %}" data-bedrooms="{% if browse_type == 'house' %}{{ review.property.associated_house[0].bedrooms }}{% endif %}" data-bathrooms="{% if browse_type == 'house' %}{{ review.property.associated_house[0].bathrooms }}{% endif %}">
                 {% if browse_type == "house" %}
                     <p>Address: {{ review.property.address }}</p>
                     <p>Review date: {{ review.date }}</p>
-                    <p>Rent: {{ review.property.house[0].rent }}</p>
-                    <p>Bedrooms: {{ review.property.house[0].bedrooms }}</p>
-                    <p>Bathrooms: {{ review.property.house[0].bathrooms }}</p>
+                    <p>Rent: {{ review.property.associated_house[0].rent }}</p>
+                    <p>Bedrooms: {{ review.property.associated_house[0].bedrooms }}</p>
+                    <p>Bathrooms: {{ review.property.associated_house[0].bathrooms }}</p>
                     <p>Letting Agent: {{ review.estate_agent.name }}</p>
                     <p>Overall Rating: {{ review.overall_rating }}</p>
                     <p>Condition Rating: {{ review.condition_rating }}</p>
@@ -59,7 +59,7 @@
                 {% elif browse_type == "halls" %}
                     <p>Address: {{ review.property.address }}</p>
                     <p>Review date: {{ review.date }}</p>
-                    <p>Rent: {{ review.property.halls[0].rent }}</p>
+                    <p>Rent: {{ review.property.associated_halls[0].rent }}</p>
                     <p>Overall Rating: {{ review.overall_rating }}</p>
                     <p>Condition Rating: {{ review.condition_rating }}</p>
                     <p>Security Rating: {{ review.security_rating }}</p>

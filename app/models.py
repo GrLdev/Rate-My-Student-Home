@@ -27,8 +27,8 @@ class Property(db.Model):
     lng = db.Column(db.Float, nullable=False)
     address = db.Column(db.String(256), nullable=False)
     reviews = db.relationship('Review', backref='property', lazy=True)
-    associated_house = db.relationship('House', backref='property', lazy=True)
-    associated_halls = db.relationship('Halls', backref='property', lazy=True)
+    associated_house = db.relationship('House', back_populates='property', lazy=True, overlaps='associated_house, associated_property')
+    associated_halls = db.relationship('Halls', back_populates='property', lazy=True, overlaps='associated_halls, associated_property')
 
 class House(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,13 +36,13 @@ class House(db.Model):
     bedrooms = db.Column(db.Integer, nullable=False)
     bathrooms = db.Column(db.Integer, nullable=False)
     rent = db.Column(db.Integer, nullable=False)
-    property = db.relationship('Property', backref='house', lazy=True, uselist=False)
+    property = db.relationship('Property', back_populates='associated_house', lazy=True, uselist=False, overlaps='associated_house, associated_property')
 
 class Halls(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
     rent = db.Column(db.Integer, nullable=False)
-    property = db.relationship('Property', backref='halls', lazy=True, uselist=False)
+    property = db.relationship('Property', back_populates='associated_halls', lazy=True, uselist=False, overlaps='associated_halls, associated_property')
 
 class EstateAgent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
