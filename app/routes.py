@@ -1,6 +1,6 @@
 from app import app, db
 from flask import render_template, url_for, redirect, request, jsonify, flash
-from app.forms import CreateReviewForm, SearchForm, SortForm
+from app.forms import CreateReviewForm, SearchForm, SortForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm
 from app.models import Review, Property, House, Halls, EstateAgent, User
 from secret_keys import google_maps_api_key
 from sqlalchemy import or_
@@ -201,3 +201,65 @@ def map():
         }
 
     return render_template('map.html', title='Map', property_location_data=property_location_data, google_maps_api_key=google_maps_api_key)
+
+@app.route('/browse', methods=['GET', 'POST'])
+@app.route('/browse/', methods=['GET', 'POST'])
+def browse():
+    browse_type_form = BrowseTypeForm()
+    if browse_type_form.validate_on_submit():
+        return browse_form_action(browse_type_form)
+    return render_template('browse.html', title='Browse', browse_type_form=browse_type_form)
+
+@app.route('/browse/house', methods=['GET', 'POST'])
+def browse_house():
+    browse_type_form = BrowseTypeForm()
+    sort_by = SortByPropertyForm()
+    filter_by_rating = FilterByRatingForm()
+    filter_by_rent = FilterByRentForm()
+    filter_by_bedrooms = FilterByBedroomsForm()
+    filter_by_bathrooms = FilterByBathroomsForm()
+
+    browse_type_form.browse_type.process(request.form, data='house')
+    reviews = Review.query.join(Property).filter(Review.property_id == Property.id).join(House).all()
+
+    if browse_type_form.validate_on_submit():
+        return browse_form_action(browse_type_form)
+    
+    return render_template('browse-category.html', title='Browse', browse_type_form=browse_type_form, sort_by=sort_by, reviews=reviews, browse_type='house', filter_by_rating=filter_by_rating, filter_by_rent=filter_by_rent, filter_by_bedrooms=filter_by_bedrooms, filter_by_bathrooms=filter_by_bathrooms)
+
+@app.route('/browse/halls', methods=['GET', 'POST'])
+def browse_halls():
+    browse_type_form = BrowseTypeForm()
+    sort_by = SortByPropertyForm()
+    filter_by_rating = FilterByRatingForm()
+    filter_by_rent = FilterByRentForm()
+
+    browse_type_form.browse_type.process(request.form, data='halls')
+    reviews = Review.query.join(Property).filter(Review.property_id == Property.id).join(Halls).all()
+
+    if browse_type_form.validate_on_submit():
+        return browse_form_action(browse_type_form)
+    
+    return render_template('browse-category.html', title='Browse', browse_type_form=browse_type_form, sort_by=sort_by, reviews=reviews, browse_type='halls', filter_by_rating=filter_by_rating, filter_by_rent=filter_by_rent)
+
+@app.route('/browse/landlord', methods=['GET', 'POST'])
+def browse_landlord():
+    browse_type_form = BrowseTypeForm()
+    sort_by = SortByLandlordForm()
+    filter_by_rating = FilterByRatingForm()
+
+    browse_type_form.browse_type.process(request.form, data='landlord')
+    reviews = Review.query.join(EstateAgent).filter(Review.estate_agent_id == EstateAgent.id).all()
+
+    if browse_type_form.validate_on_submit():
+        return browse_form_action(browse_type_form)
+    
+    return render_template('browse-category.html', title='Browse', browse_type_form=browse_type_form, sort_by=sort_by, reviews=reviews, browse_type='landlord', filter_by_rating=filter_by_rating)
+
+def browse_form_action(browse_type_form):
+    if browse_type_form.browse_type.data == 'house':
+        return redirect(url_for('browse_house'))
+    elif browse_type_form.browse_type.data == 'halls':
+        return redirect(url_for('browse_halls'))
+    elif browse_type_form.browse_type.data == 'landlord':
+        return redirect(url_for('browse_landlord'))
