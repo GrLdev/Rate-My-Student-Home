@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.models import Review, Property, House, Halls, EstateAgent, User, Admin, Report, datetime
 from app.forms import CreateReviewForm, SearchForm, SortForm, AdminLoginForm, ReportForm, RemoveReviewForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm
 from datetime import timedelta
+from sqlalchemy.orm import joinedload
 
 @app.route('/')
 def home():
@@ -296,7 +297,7 @@ def browse_house():
     filter_by_bathrooms = FilterByBathroomsForm()
 
     browse_type_form.browse_type.process(request.form, data='house')
-    reviews = Review.query.join(Property).filter(Review.property_id == Property.id).join(House).all()
+    reviews = (Review.query.join(Property).filter(Review.property_id == Property.id).join(House).options(joinedload(Review.property)).filter(Review.removed == False).all())
 
     if browse_type_form.validate_on_submit():
         return browse_form_action(browse_type_form)
@@ -311,7 +312,7 @@ def browse_halls():
     filter_by_rent = FilterByRentForm()
 
     browse_type_form.browse_type.process(request.form, data='halls')
-    reviews = Review.query.join(Property).filter(Review.property_id == Property.id).join(Halls).all()
+    reviews = (Review.query.join(Property).filter(Review.property_id == Property.id).join(Halls).options(joinedload(Review.property)).filter(Review.removed == False).all())
 
     if browse_type_form.validate_on_submit():
         return browse_form_action(browse_type_form)
@@ -325,7 +326,7 @@ def browse_landlord():
     filter_by_rating = FilterByRatingForm()
 
     browse_type_form.browse_type.process(request.form, data='landlord')
-    reviews = Review.query.join(EstateAgent).filter(Review.estate_agent_id == EstateAgent.id).all()
+    reviews = (Review.query.join(EstateAgent).filter(Review.estate_agent_id == EstateAgent.id).options(joinedload(Review.estate_agent)).filter(Review.removed == False).all())
 
     if browse_type_form.validate_on_submit():
         return browse_form_action(browse_type_form)
