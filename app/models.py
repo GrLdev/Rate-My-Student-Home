@@ -2,6 +2,8 @@ from app import db, login_manager, app
 from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy import event
+from queue import Queue
+import threading
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -77,17 +79,27 @@ class Report(db.Model):
 def load_user(user_id):
     return Admin.query.get(int(user_id))
 
-# Update the 'rent' column on the House or Halls table when a new review is added
-@event.listens_for(Review, 'after_insert')
-@event.listens_for(Review, 'after_update')
-def update_review_rent(mapper, connection, target):
-    property_id = target.property_id
-    if property_id:
+rent_updates_queue = Queue()
+
+def update_rent_thread():
+    while True:
+        property_id, latest_rent = rent_updates_queue.get()
         with app.app_context():
             house_or_halls = House.query.filter_by(property_id=property_id).first()
             if not house_or_halls:
                 house_or_halls = Halls.query.filter_by(property_id=property_id).first()
             if house_or_halls:
-                latest_rent = target.rent  
                 house_or_halls.rent = latest_rent
                 db.session.commit()
+        rent_updates_queue.task_done()
+
+update_thread = threading.Thread(target=update_rent_thread)
+update_thread.daemon = True
+update_thread.start()
+
+@event.listens_for(Review, 'after_insert')
+@event.listens_for(Review, 'after_update')
+def update_review_rent(mapper, connection, target):
+    property_id = target.property_id
+    if property_id:
+        rent_updates_queue.put((property_id, target.rent))
