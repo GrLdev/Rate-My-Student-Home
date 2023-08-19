@@ -20,5 +20,3 @@ db = SQLAlchemy(app, engine_options={'pool_pre_ping': True})
 # login manager
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-from app import routes, models
