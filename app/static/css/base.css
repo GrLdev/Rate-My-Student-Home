@@ -32,6 +32,9 @@ nav a {
 footer{
   text-align: center;
   font-family: 'Montserrat', sans-serif;
-  color: black;
+}
+
+.copyright-link {
   text-decoration: none;
+  color: black;
 }
