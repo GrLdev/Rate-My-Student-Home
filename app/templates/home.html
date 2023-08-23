@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Rate My Student Home</h1>
-{#    TODO: Add Home content#}
+{# TODO: Add Home content#}
+<style>
+    .welcome-block {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .welcome-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .welcome-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        font-size: 2em;
+    }
+</style>
+<div class="welcome-block">
+    <img class="welcome-image" src="{{ url_for('static', filename='img/' + 'cardiffSkyline.avif') }}"
+        alt="Cardiff Skyline">
+
+    <div class="welcome-text">
+        <p>Welcome to Rate My Student Home Cardiff!</p>
+    </div>
+</div>
 {% endblock content %}
