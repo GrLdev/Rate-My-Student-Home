@@ -38,3 +38,7 @@ footer{
   text-decoration: none;
   color: black;
 }
+
+body {
+  margin: 0;
+}
