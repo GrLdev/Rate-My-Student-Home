@@ -28,3 +28,17 @@ nav a {
 .nav-logo {
   vertical-align: middle;
 }
+
+footer{
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.copyright-link {
+  text-decoration: none;
+  color: black;
+}
+
+body {
+  margin: 0;
+}
