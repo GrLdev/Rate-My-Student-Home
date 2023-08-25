@@ -1,110 +1,127 @@
-{% extends "base.html" %}
-{% block content %}
-{# TODO: Add Home content#}
+{% extends "base.html" %} {% block content %} {# TODO: Add Home content#}
 <style>
-    .welcome-block {
-        position: relative;
-        display: flex;
-        flex-wrap: nowrap;
-        flex-direction: column;
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        padding: 140px 0;
-        background-image: url({{ url_for('static', filename='img/' + 'cardiffSkyline.webp') }});
-    }
+  .welcome-block {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 140px 0;
+    background-image: url({{url_for(
+        "static",
+        filename= "img/" + "cardiffSkyline.webp"
+      )}});
+  }
 
-    .welcome-text {
-        text-align: center;
-        color: white;
-        font-family: 'Montserrat', sans-serif;
-    }
+  .welcome-text {
+    text-align: center;
+    color: white;
+    font-family: "Montserrat", sans-serif;
+  }
 
-    .welcome-text-h1 {
-        font-size: 3em;
-        font-weight: 700;
-        margin-bottom: 0.5em;
-    }
+  .welcome-text-h1 {
+    font-size: 3em;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+  }
 
-    .welcome-text-h2 {
-        font-size: 1.5em;
-        font-weight: 400;
-        margin-bottom: 0.5em;
-    }
+  .welcome-text-h2 {
+    font-size: 1.5em;
+    font-weight: 400;
+    margin-bottom: 0.5em;
+  }
 
-    .welcome-buttons {
-        text-align: center;
-        color: white;
-        font-family: 'Montserrat', sans-serif;
-        margin-top: 50px;
-    }
+  .welcome-buttons {
+    text-align: center;
+    color: white;
+    font-family: "Montserrat", sans-serif;
+    margin-top: 50px;
+  }
 
-    .custom-button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 0 10px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        border: none;
-        border-radius: 5px;
-        background-color: #a30303; /* Change to your desired background color */
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+  .custom-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    background-color: #a30303; /* Change to your desired background color */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-    .custom-button:hover {
-        background-color: #a31c18; /* Change to your desired hover color */
-    }
+  .custom-button:hover {
+    background-color: #a31c18; /* Change to your desired hover color */
+  }
 
-    .about-container {
-        display: flex;
-        flex-wrap: nowrap;
-        flex-direction: row;
-        justify-content: space-evenly;
-        align-items: center;
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 20px;
-        font-family: 'Montserrat', sans-serif;
-    }
+  .about-container {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    font-family: "Montserrat", sans-serif;
+  }
 
-    .about-container img {
-        border: none;
-        border-radius: 5px;
-    }
+  .about-container img {
+    border: none;
+    border-radius: 5px;
+  }
 
-    .about-container div {
-        padding: 0 20px;
-    }
+  .about-container div {
+    padding: 0 20px;
+  }
 </style>
 <div class="welcome-block">
-    <div class="welcome-text">
-        <p class="welcome-text-h1">Welcome to Rate My Student Home Cardiff!</p>
-        <p class="welcome-text-h2">Something like a motto of what the site does like The Best Place to Rate YOUR Student Home</p>
-    </div>
-    <div class="welcome-buttons">
-        <a href="{{ url_for('browse') }}" class="custom-button">Find a Review</a>
-        <a href="{{ url_for('create') }}" class="custom-button">Submit a Review</a>
-    </div>
-
+  <div class="welcome-text">
+    <p class="welcome-text-h1">Welcome to Rate My Student Home Cardiff!</p>
+    <p class="welcome-text-h2">
+      Empowering Cardiff Students, One Review at a Time
+    </p>
+  </div>
+  <div class="welcome-buttons">
+    <a href="{{ url_for('browse') }}" class="custom-button">Find a Review</a>
+    <a href="{{ url_for('create') }}" class="custom-button">Submit a Review</a>
+  </div>
 </div>
 <div class="about-container">
-    <div>
-        <h1>About Us</h1>
-        <h3>What is Rate My Student Home Cardiff? It is Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  </h3>
-    </div>
-    <img  src="{{ url_for('static', filename='img/' + 'pierheadCardiffBay.webp') }}" alt="Pierhead Building" width="200">
+  <div>
+    <h1>About Us</h1>
+    <h3>
+      What is Rate My Student Home Cardiff? It is Lorem ipsum dolor sit amet,
+      consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+      dolore magna aliqua.
+    </h3>
+  </div>
+  <img
+    src="{{ url_for('static', filename='img/' + 'pierheadCardiffBay.webp') }}"
+    alt="Pierhead Building"
+    width="200"
+  />
 </div>
 
 <div class="about-container">
-    <img src="{{ url_for('static', filename='img/' + 'womanbyStreet.webp') }}" alt="Pierhead Building" width="200">
-    <div>
-        <h1>How it Works</h1>
-        <h3>All you have to do is lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  </h3>
-    </div>
+  <img
+    src="{{ url_for('static', filename='img/' + 'womanbyStreet.webp') }}"
+    alt="Pierhead Building"
+    width="200"
+  />
+  <div>
+    <h1>How it Works</h1>
+    <h3>
+      All you have to do is lorem ipsum dolor sit amet, consectetur adipiscing
+      elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </h3>
+  </div>
 </div>
 
 {% endblock content %}
