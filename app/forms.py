@@ -116,3 +116,20 @@ class FilterByBedroomsForm(FlaskForm):
 class FilterByBathroomsForm(FlaskForm):
     bathrooms_min = SelectField("Min Bathrooms", choices=[('1','1'),('2','2'),('3','3'),('4','4'),('5','5')], validators=[DataRequired()], default='1', id="bathrooms-min-input")
     bathrooms_max = SelectField("Max Bathrooms", choices=[('1','1'),('2','2'),('3','3'),('4','4'),('5','5')], validators=[DataRequired()], default='10+', id="bathrooms-max-input")
+    
+class EstateAgentRequestForm(FlaskForm):
+    name = StringField("Estate Agent Name", validators=[DataRequired(), Length(min=2, max=58)])
+    agent_email = StringField("Estate Agent Email", validators=[DataRequired()])
+    phone = StringField("Estate Agent Phone", validators=[DataRequired()])
+    website = StringField("Estate Agent Website", validators=[DataRequired()])
+
+    university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
+    first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
+    last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
+    user_email = StringField("Email", validators=[DataRequired()])
+
+    submit = SubmitField("Submit Request")
+
+class RequestHandleForm(FlaskForm):
+    action = SelectField('Action', choices=[('accept', 'Accept'), ('reject', 'Reject')])
+    submit = SubmitField('Handle')
