@@ -53,6 +53,7 @@ class EstateAgent(db.Model):
     phone = db.Column(db.String(256), nullable=False)
     website = db.Column(db.String(256), nullable=False)
     reviews = db.relationship('Review', backref='estate_agent')
+    requests = db.relationship('EstateAgentRequest', back_populates='estate_agent', lazy=True)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -60,6 +61,7 @@ class User(db.Model):
     email = db.Column(db.String(256), nullable=False)
     university = db.Column(db.String(256), nullable=True)
     reports = db.relationship('Report', backref='user', lazy=True)
+    estate_agent_requests = db.relationship('EstateAgentRequest', back_populates='user', lazy=True)
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,6 +76,19 @@ class Report(db.Model):
     handled = db.Column(db.Boolean, nullable=False, default=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.now())
     comment = db.Column(db.String(1000), nullable=False)
+
+class EstateAgentRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    estate_agent_id = db.Column(db.Integer, db.ForeignKey('estate_agent.id'), nullable=True)
+    name = db.Column(db.String(256), nullable=False)
+    email = db.Column(db.String(256), nullable=False)
+    phone = db.Column(db.String(256), nullable=False)
+    website = db.Column(db.String(256), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    handled = db.Column(db.Boolean, nullable=False, default=False)
+    user = db.relationship('User', back_populates='estate_agent_requests', lazy=True)
+    estate_agent = db.relationship('EstateAgent', back_populates='requests', lazy=True)
 
 @login_manager.user_loader
 def load_user(user_id):
