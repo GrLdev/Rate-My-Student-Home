@@ -100,9 +100,16 @@ def update_rent_thread():
     while True:
         property_id, latest_rent = rent_updates_queue.get()
         with app.app_context():
-            house_or_halls = House.query.filter_by(property_id=property_id).first()
-            if not house_or_halls:
-                house_or_halls = Halls.query.filter_by(property_id=property_id).first()
+            house_or_halls = (
+                House.query.join(Review, House.property_id == Review.property_id)
+                    .filter(House.property_id == property_id, Review.removed == False)
+                    .order_by(Review.date.desc())
+                    .first()
+                or Halls.query.join(Review, Halls.property_id == Review.property_id)
+                    .filter(Halls.property_id == property_id, Review.removed == False)
+                    .order_by(Review.date.desc())
+                    .first()
+            )
             if house_or_halls:
                 house_or_halls.rent = latest_rent
                 db.session.commit()
