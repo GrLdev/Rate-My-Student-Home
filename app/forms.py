@@ -142,7 +142,7 @@ class HallsRequestForm(FlaskForm):
     postcode = StringField("Postcode", validators=[Length(min=5, max=8), Regexp("([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
     website = StringField("Halls Website", validators=[DataRequired()])
     rent = PriceField("Rent £", validators=[DataRequired(), NumberRange(min=0, max=10000)])
-    comment = TextAreaField("Comment")
+    comment = TextAreaField("Comment", validators=[Length(max=1000)])
 
     university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
     first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
