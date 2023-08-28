@@ -2,7 +2,7 @@ from app import app, db
 from flask import render_template, url_for, redirect, request, jsonify, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from secret_keys import google_maps_api_key
-from sqlalchemy import or_
+from sqlalchemy import or_, func, distinct
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.models import Review, Property, House, Halls, EstateAgent, User, Admin, Report, datetime
 from app.forms import CreateReviewForm, SearchForm, SortForm, AdminLoginForm, ReportForm, RemoveReviewForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm
@@ -340,3 +340,14 @@ def browse_form_action(browse_type_form):
         return redirect(url_for('browse_halls'))
     elif browse_type_form.browse_type.data == 'landlord':
         return redirect(url_for('browse_landlord'))
+
+@app.route('/rankings', methods=['GET', 'POST'])
+def rankings():
+    letting_agents = db.session.query(
+        EstateAgent,
+        func.avg(Review.overall_rating).label('avg_rating'),
+        func.count(Review.id).label('num_reviews'),
+        func.count(distinct(Review.property_id)).label('num_properties')
+    ).join(Review).group_by(EstateAgent).having(func.count(Review.id) > 1).order_by(func.avg(Review.overall_rating).desc()).all()
+
+    return render_template('rankings.html', title='Rankings', letting_agents=letting_agents)

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Letting Agent Rankings</h1>
+
+<table>
+    <tr>
+      <th>Letting Agent</th>
+      <th>Average Rating</th>
+      <th>Number of Reviews</th>
+      <th>Number of Properties</th>
+    </tr>
+    {% for agent, avg_rating, num_reviews, num_properties in letting_agents %}
+      <tr>
+        <td>{{ agent.name }}</td>
+        <td>{{ avg_rating }}</td>
+        <td>{{ num_reviews }}</td>
+        <td>{{ num_properties }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+{% endblock content %}
