@@ -130,6 +130,45 @@ class EstateAgentRequestForm(FlaskForm):
 
     submit = SubmitField("Submit Request")
 
+class HallsRequestForm(FlaskForm):
+    lat = None
+    lng = None
+    errors = []
+
+    name = StringField("Halls Name", validators=[DataRequired(), Length(min=2, max=58)])
+    address_line_1 = StringField("Address Line 1", validators=[Length(min=2, max=94)])
+    address_line_2 = StringField("Address Line 2", validators=[Length(max=94)])
+    city = StringField("City", validators=[Length(min=2, max=58)])
+    postcode = StringField("Postcode", validators=[Length(min=5, max=8), Regexp("([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
+    website = StringField("Halls Website", validators=[DataRequired()])
+    rent = PriceField("Rent £", validators=[DataRequired(), NumberRange(min=0, max=10000)])
+    comment = TextAreaField("Comment")
+
+    university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
+    first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
+    last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
+    user_email = StringField("Email", validators=[DataRequired()])
+
+    submit = SubmitField("Submit Request")
+
+    def validate(self, extra_validators=None):
+        self.errors.clear()
+        try:
+            combined_address = self.address_line_1.data + "+" + self.address_line_2.data + "+" + self.city.data + "+" + self.postcode.data
+            result = get_coords(combined_address)
+            if not result:
+                raise ValidationError("Something went wrong internally")
+            elif isinstance(result, str):
+                raise ValidationError(result)
+            else:
+                self.lat, self.lng = result 
+
+            return True
+        
+        except Exception as e:
+            self.errors.append(str(e))
+            return False
+
 class RequestHandleForm(FlaskForm):
     action = SelectField('Action', choices=[('accept', 'Accept'), ('reject', 'Reject')])
     submit = SubmitField('Handle')
