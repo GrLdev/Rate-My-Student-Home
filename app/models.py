@@ -90,6 +90,24 @@ class EstateAgentRequest(db.Model):
     user = db.relationship('User', back_populates='estate_agent_requests', lazy=True)
     estate_agent = db.relationship('EstateAgent', back_populates='requests', lazy=True)
 
+class HallsRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    halls_id = db.Column(db.Integer, db.ForeignKey('halls.id'), nullable=True)
+    name = db.Column(db.String(256), nullable=False)
+    website = db.Column(db.String(256), nullable=False)
+    comment = db.Column(db.String(1000), nullable=True)
+    rent = db.Column(db.Integer, nullable=False)
+
+    lat = db.Column(db.Float, nullable=False)
+    lng = db.Column(db.Float, nullable=False)
+    address = db.Column(db.String(256), nullable=False)
+
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    handled = db.Column(db.Boolean, nullable=False, default=False)
+    user = db.relationship('User', backref='halls_requests', lazy=True)
+    halls = db.relationship('Halls', backref='requests', lazy=True)
+
 @login_manager.user_loader
 def load_user(user_id):
     return Admin.query.get(int(user_id))

@@ -4,8 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from secret_keys import google_maps_api_key
 from sqlalchemy import or_, func, distinct
 from werkzeug.security import check_password_hash, generate_password_hash
-from app.models import Review, Property, House, Halls, EstateAgent, User, Admin, Report, EstateAgentRequest, datetime
-from app.forms import CreateReviewForm, SearchForm, SortForm, AdminLoginForm, ReportForm, RemoveReviewForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm, EstateAgentRequestForm, RequestHandleForm
+from app.models import Review, Property, House, Halls, EstateAgent, User, Admin, Report, EstateAgentRequest, HallsRequest, datetime
+from app.forms import CreateReviewForm, SearchForm, SortForm, AdminLoginForm, ReportForm, RemoveReviewForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm, EstateAgentRequestForm, HallsRequestForm, RequestHandleForm
 from datetime import timedelta
 from sqlalchemy.orm import joinedload
 
@@ -268,7 +268,19 @@ def admin_dashboard():
                 flash('Estate agent request accepted', 'success')
 
             elif "halls-request" in request.form:
-                pass
+                halls_request = HallsRequest.query.filter_by(id=request.form["halls-request"]).first_or_404()
+                property = Property(lat=halls_request.lat, lng=halls_request.lng, address=halls_request.name)
+                db.session.add(property)
+                db.session.commit()
+                
+                halls = Halls(property_id=property.id, rent=halls_request.rent)
+                db.session.add(halls)
+                db.session.commit()
+
+                halls_request.handled = True
+                halls_request.halls_id = halls.id
+                db.session.commit()
+                flash('Halls request accepted', 'success')
 
         elif action == "reject":
             if "estate-agent-request" in request.form:
@@ -278,7 +290,10 @@ def admin_dashboard():
                 flash('Estate agent request rejected', 'success')
 
             elif "halls-request" in request.form:
-                pass
+                halls_request = HallsRequest.query.filter_by(id=request.form["halls-request"]).first_or_404()
+                halls_request.handled = True
+                db.session.commit()
+                flash('Halls request rejected', 'success')
 
     unhandled_reports = Report.query.filter_by(handled=False).all()
     handled_reports = Report.query.filter_by(handled=True).all()
@@ -286,7 +301,10 @@ def admin_dashboard():
     unhandled_estate_agent_requests = EstateAgentRequest.query.filter_by(handled=False).all()
     handled_estate_agent_requests = EstateAgentRequest.query.filter_by(handled=True).all()
 
-    return render_template('admin-dashboard.html', title='Admin Dashboard', unhandled_reports=unhandled_reports, handled_reports=handled_reports, report_handle_form=report_handle_form, request_handle_form=request_handle_form, unhandled_estate_agent_requests=unhandled_estate_agent_requests, handled_estate_agent_requests=handled_estate_agent_requests)
+    unhandled_halls_requests = HallsRequest.query.filter_by(handled=False).all()
+    handled_halls_requests = HallsRequest.query.filter_by(handled=True).all()
+
+    return render_template('admin-dashboard.html', title='Admin Dashboard', unhandled_reports=unhandled_reports, handled_reports=handled_reports, report_handle_form=report_handle_form, request_handle_form=request_handle_form, unhandled_estate_agent_requests=unhandled_estate_agent_requests, handled_estate_agent_requests=handled_estate_agent_requests, unhandled_halls_requests=unhandled_halls_requests, handled_halls_requests=handled_halls_requests)
 
 @app.route('/admin-logout')
 @login_required
@@ -411,3 +429,28 @@ def request_estate_agent():
         flash(error, 'danger')
     return render_template('request-estate-agent.html', title='Request Estate Agent', form=form)
 
+@app.route('/request/halls', methods=['GET', 'POST'])
+def request_halls():
+    form = HallsRequestForm()
+    if form.validate_on_submit():
+        existing_user = User.query.filter_by(email=form.user_email.data).first()
+
+        if not existing_user:
+            fullname = form.first_name.data + ' ' + form.last_name.data
+            user = User(name=fullname, email=form.user_email.data, university=form.university.data)
+            db.session.add(user)
+            db.session.commit()
+        else:
+            user = existing_user
+        
+        address = form.address_line_1.data + (', ' + form.address_line_2.data if form.address_line_2.data else '') + ', ' + form.city.data + ', ' + form.postcode.data
+        request = HallsRequest(user_id=user.id, name=form.name.data, website=form.website.data, comment=form.comment.data, lat=form.lat, lng=form.lng, address=address, rent=form.rent.data)
+        db.session.add(request)
+        db.session.commit()
+
+        flash('Request submitted successfully', 'success')
+        return redirect(url_for('home'))
+    
+    for error in form.errors:
+        flash(error, 'danger')
+    return render_template('request-halls.html', title='Request Halls', form=form)

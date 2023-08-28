@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="post" action="">
+    {{ form.csrf_token }}
+    {{ form.name.label }} {{ form.name }}<br>
+    {{ form.address_line_1.label }} {{ form.address_line_1 }}<br>
+    {{ form.address_line_2.label }} {{ form.address_line_2 }}<br>
+    {{ form.city.label }} {{ form.city }}<br>
+    {{ form.postcode.label }} {{ form.postcode }}<br>
+    {{ form.website.label }} {{ form.website }}<br>
+    {{ form.rent.label }} {{ form.rent }}<br>
+    {{ form.comment.label }} {{ form.comment }}<br>
+
+    {{ form.university.label }} {{ form.university }}<br>
+    {{ form.first_name.label }} {{ form.first_name }}<br>
+    {{ form.last_name.label }} {{ form.last_name }}<br>
+    {{ form.user_email.label }} {{ form.user_email }}<br>
+
+    {{ form.submit() }}
+</form>
+
+{% endblock content %}

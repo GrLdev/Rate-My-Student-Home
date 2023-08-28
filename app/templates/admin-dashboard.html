@@ -141,4 +141,77 @@
     <h1>No handled estate agent requests</h1>
 {% endif %}
 
+{% if unhandled_halls_requests %}
+    <h2>Unhandled Halls Requests</h2>
+    <table>
+        <tr>
+            <th>Request ID</th>
+            <th>Requester Name</th>
+            <th>Requester Email</th>
+            <th>Halls Name</th>
+            <th>Halls Website</th>
+            <th>Halls Address</th>
+            <th>lat:lng</th>
+            <th>Rent</th>
+            <th>Date</th>
+            <th>Handle</th>
+        </tr>
+        {% for request in unhandled_halls_requests %}
+            <tr>
+                <td>{{ request.id }}</td>
+                <td>{{ request.user.name }}</td>
+                <td>{{ request.user.email }}</td>
+                <td>{{ request.name }}</td>
+                <td>{{ request.website }}</td>
+                <td>{{ request.address }}</td>
+                <td>{{ request.lat }}:{{ request.lng }}</td>
+                <td>{{ request.rent }}</td>
+                <td>{{ request.date }}</td>
+                <td>
+                    <form method="POST" action="">
+                        <input type="hidden" id="halls-request" name="halls-request" value="{{ request.id }}">
+                        {{ request_handle_form.csrf_token }}
+                        {{ request_handle_form.action.label }} {{ request_handle_form.action }} 
+                        {{ request_handle_form.submit() }}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h1>No unhandled halls requests</h1>
+{% endif %}
+
+{% if handled_halls_requests %}
+    <h2>Handled Halls Requests</h2>
+    <table>
+        <tr>
+            <th>Request ID</th>
+            <th>Requester Name</th>
+            <th>Requester Email</th>
+            <th>Halls Name</th>
+            <th>Halls Website</th>
+            <th>Halls Address</th>
+            <th>lat:lng</th>
+            <th>Rent</th>
+            <th>Date</th>
+        </tr>
+        {% for request in handled_halls_requests %}
+            <tr>
+                <td>{{ request.id }}</td>
+                <td>{{ request.user.name }}</td>
+                <td>{{ request.user.email }}</td>
+                <td>{{ request.name }}</td>
+                <td>{{ request.website }}</td>
+                <td>{{ request.address }}</td>
+                <td>{{ request.lat }}:{{ request.lng }}</td>
+                <td>{{ request.rent }}</td>
+                <td>{{ request.date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h1>No handled halls requests</h1>
+{% endif %}
+
 {% endblock content %}
