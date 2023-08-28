@@ -4,8 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from secret_keys import google_maps_api_key
 from sqlalchemy import or_, func, distinct
 from werkzeug.security import check_password_hash, generate_password_hash
-from app.models import Review, Property, House, Halls, EstateAgent, User, Admin, Report, datetime
-from app.forms import CreateReviewForm, SearchForm, SortForm, AdminLoginForm, ReportForm, RemoveReviewForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm
+from app.models import Review, Property, House, Halls, EstateAgent, User, Admin, Report, EstateAgentRequest, datetime
+from app.forms import CreateReviewForm, SearchForm, SortForm, AdminLoginForm, ReportForm, RemoveReviewForm, BrowseTypeForm, SortByPropertyForm, SortByLandlordForm, FilterByRatingForm, FilterByRentForm, FilterByBedroomsForm, FilterByBathroomsForm, EstateAgentRequestForm, RequestHandleForm
 from datetime import timedelta
 from sqlalchemy.orm import joinedload
 
@@ -235,11 +235,10 @@ def admin_login():
 @app.route('/admin-dashboard', methods=['GET', 'POST'])
 @login_required
 def admin_dashboard():
-    form = RemoveReviewForm()
-    unhandled_reports = Report.query.filter_by(handled=False).all()
-    handled_reports = Report.query.filter_by(handled=True).all()
-    
-    if form.validate_on_submit():
+    report_handle_form = RemoveReviewForm()
+    request_handle_form = RequestHandleForm()
+
+    if report_handle_form.validate_on_submit():
         report = Report.query.filter_by(id=request.form["reported"]).first_or_404()
         review = Review.query.filter_by(id=report.review_id).first_or_404()
 
@@ -252,7 +251,42 @@ def admin_dashboard():
             flash('Review ignored', 'success')
         db.session.commit()
         return redirect(url_for('admin_dashboard'))
-    return render_template('admin-dashboard.html', title='Admin Dashboard', unhandled_reports=unhandled_reports, handled_reports=handled_reports, form=form)
+    
+    if request_handle_form.validate_on_submit():
+        action = request.form.get("action")
+        
+        if action == "accept":
+            if "estate-agent-request" in request.form:
+                estate_agent_request = EstateAgentRequest.query.filter_by(id=request.form["estate-agent-request"]).first_or_404()
+                estate_agent = EstateAgent(name=estate_agent_request.name, email=estate_agent_request.email, phone=estate_agent_request.phone, website=estate_agent_request.website)
+                db.session.add(estate_agent)
+                db.session.commit()
+
+                estate_agent_request.handled = True
+                estate_agent_request.estate_agent_id = estate_agent.id
+                db.session.commit()
+                flash('Estate agent request accepted', 'success')
+
+            elif "halls-request" in request.form:
+                pass
+
+        elif action == "reject":
+            if "estate-agent-request" in request.form:
+                estate_agent_request = EstateAgentRequest.query.filter_by(id=request.form["estate-agent-request"]).first_or_404()
+                estate_agent_request.handled = True
+                db.session.commit()
+                flash('Estate agent request rejected', 'success')
+
+            elif "halls-request" in request.form:
+                pass
+
+    unhandled_reports = Report.query.filter_by(handled=False).all()
+    handled_reports = Report.query.filter_by(handled=True).all()
+
+    unhandled_estate_agent_requests = EstateAgentRequest.query.filter_by(handled=False).all()
+    handled_estate_agent_requests = EstateAgentRequest.query.filter_by(handled=True).all()
+
+    return render_template('admin-dashboard.html', title='Admin Dashboard', unhandled_reports=unhandled_reports, handled_reports=handled_reports, report_handle_form=report_handle_form, request_handle_form=request_handle_form, unhandled_estate_agent_requests=unhandled_estate_agent_requests, handled_estate_agent_requests=handled_estate_agent_requests)
 
 @app.route('/admin-logout')
 @login_required
@@ -351,3 +385,29 @@ def rankings():
     ).join(Review).group_by(EstateAgent).having(func.count(Review.id) > 1).order_by(func.avg(Review.overall_rating).desc()).all()
 
     return render_template('rankings.html', title='Rankings', letting_agents=letting_agents)
+    
+@app.route('/request/estate-agent', methods=['GET', 'POST'])
+def request_estate_agent():
+    form = EstateAgentRequestForm()
+    if form.validate_on_submit():
+        existing_user = User.query.filter_by(email=form.user_email.data).first()
+
+        if not existing_user:
+            fullname = form.first_name.data + ' ' + form.last_name.data
+            user = User(name=fullname, email=form.user_email.data, university=form.university.data)
+            db.session.add(user)
+            db.session.commit()
+        else:
+            user = existing_user
+            
+        request = EstateAgentRequest(user_id=user.id, name=form.name.data, email=form.agent_email.data, phone=form.phone.data, website=form.website.data)
+        db.session.add(request)
+        db.session.commit()
+
+        flash('Request submitted successfully', 'success')
+        return redirect(url_for('home'))
+    
+    for error in form.errors:
+        flash(error, 'danger')
+    return render_template('request-estate-agent.html', title='Request Estate Agent', form=form)
+

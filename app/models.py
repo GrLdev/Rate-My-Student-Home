@@ -53,6 +53,7 @@ class EstateAgent(db.Model):
     phone = db.Column(db.String(256), nullable=False)
     website = db.Column(db.String(256), nullable=False)
     reviews = db.relationship('Review', backref='estate_agent')
+    requests = db.relationship('EstateAgentRequest', back_populates='estate_agent', lazy=True)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -60,6 +61,7 @@ class User(db.Model):
     email = db.Column(db.String(256), nullable=False)
     university = db.Column(db.String(256), nullable=True)
     reports = db.relationship('Report', backref='user', lazy=True)
+    estate_agent_requests = db.relationship('EstateAgentRequest', back_populates='user', lazy=True)
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,6 +77,19 @@ class Report(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.now())
     comment = db.Column(db.String(1000), nullable=False)
 
+class EstateAgentRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    estate_agent_id = db.Column(db.Integer, db.ForeignKey('estate_agent.id'), nullable=True)
+    name = db.Column(db.String(256), nullable=False)
+    email = db.Column(db.String(256), nullable=False)
+    phone = db.Column(db.String(256), nullable=False)
+    website = db.Column(db.String(256), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    handled = db.Column(db.Boolean, nullable=False, default=False)
+    user = db.relationship('User', back_populates='estate_agent_requests', lazy=True)
+    estate_agent = db.relationship('EstateAgent', back_populates='requests', lazy=True)
+
 @login_manager.user_loader
 def load_user(user_id):
     return Admin.query.get(int(user_id))
@@ -85,9 +100,16 @@ def update_rent_thread():
     while True:
         property_id, latest_rent = rent_updates_queue.get()
         with app.app_context():
-            house_or_halls = House.query.filter_by(property_id=property_id).first()
-            if not house_or_halls:
-                house_or_halls = Halls.query.filter_by(property_id=property_id).first()
+            house_or_halls = (
+                House.query.join(Review, House.property_id == Review.property_id)
+                    .filter(House.property_id == property_id, Review.removed == False)
+                    .order_by(Review.date.desc())
+                    .first()
+                or Halls.query.join(Review, Halls.property_id == Review.property_id)
+                    .filter(Halls.property_id == property_id, Review.removed == False)
+                    .order_by(Review.date.desc())
+                    .first()
+            )
             if house_or_halls:
                 house_or_halls.rent = latest_rent
                 db.session.commit()
