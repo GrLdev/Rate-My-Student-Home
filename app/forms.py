@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, RadioField, SelectField, TextAreaField, IntegerRangeField, DecimalField, IntegerField
+from wtforms import StringField, SubmitField, BooleanField, RadioField, SelectField, TextAreaField, IntegerRangeField, DecimalField, IntegerField, PasswordField
 from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Regexp
 from app.maps import get_coords
 from decimal import Decimal, InvalidOperation
@@ -17,7 +17,6 @@ class PriceField(DecimalField):
             self.data = None
 
 class CreateReviewForm(FlaskForm):
-    # place_id = None
     lat = None
     lng = None
     errors = []
@@ -27,7 +26,7 @@ class CreateReviewForm(FlaskForm):
     address_line_1 = StringField("Address Line 1", validators=[Length(min=2, max=94)])
     address_line_2 = StringField("Address Line 2", validators=[Length(max=94)])
     city = StringField("City", validators=[Length(min=2, max=58)])
-    postcode = StringField("Postcode", validators=[Length(min=5, max=8), Regexp("([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
+    postcode = StringField("Postcode", validators=[Length(min=5, max=8), Regexp(regex=r"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
     hall = SelectField("Halls", choices=[(hall.id, Property.query.filter_by(id=hall.property_id).first().address) for hall in Halls.query.all()])
 
     # step 2
@@ -45,7 +44,7 @@ class CreateReviewForm(FlaskForm):
     university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
     first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
     last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Regexp(regex=r"^[a-zA-Z0-9._%+-]+@(cardiff\.ac\.uk|cardiffmet\.ac\.uk|southwales\.ac\.uk)$", message="Invalid email")])
     accepted_terms = BooleanField("I accept the terms and conditions", validators=[DataRequired()])
     submit = SubmitField("Submit Review")
 
@@ -77,15 +76,15 @@ class SortForm(FlaskForm):
     sort_by = SelectField("Sort By", choices=[('recent','Most Recent'),('oldest','Oldest'),('overall_high','Overall Rating (highest first)'),('overall_low','Overall Rating (lowest first)')], validators=[DataRequired()], default='recent', id="sort-input")
 
 class AdminLoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
-    password = StringField("Password", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Regexp(regex=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", message="Invalid email")])
+    password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Login")
 
 class ReportForm(FlaskForm):
     university = RadioField("Which university do you belong to?", choices=[(None,'None'),('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
     first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
     last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Regexp(regex=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", message="Invalid email")])
     comment = TextAreaField("Comment", validators=[DataRequired(), Length(min=10, max=1000)])
     submit = SubmitField("Report Review")
 
@@ -119,14 +118,14 @@ class FilterByBathroomsForm(FlaskForm):
     
 class EstateAgentRequestForm(FlaskForm):
     name = StringField("Estate Agent Name", validators=[DataRequired(), Length(min=2, max=58)])
-    agent_email = StringField("Estate Agent Email", validators=[DataRequired()])
+    agent_email = StringField("Estate Agent Email", validators=[DataRequired(), Regexp(regex=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", message="Invalid email")])
     phone = StringField("Estate Agent Phone", validators=[DataRequired()])
     website = StringField("Estate Agent Website", validators=[DataRequired()])
 
     university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
     first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
     last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
-    user_email = StringField("Email", validators=[DataRequired()])
+    user_email = StringField("Email", validators=[DataRequired(), Regexp(regex=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", message="Invalid email")])
 
     submit = SubmitField("Submit Request")
 
@@ -139,7 +138,7 @@ class HallsRequestForm(FlaskForm):
     address_line_1 = StringField("Address Line 1", validators=[Length(min=2, max=94)])
     address_line_2 = StringField("Address Line 2", validators=[Length(max=94)])
     city = StringField("City", validators=[Length(min=2, max=58)])
-    postcode = StringField("Postcode", validators=[Length(min=5, max=8), Regexp("([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
+    postcode = StringField("Postcode", validators=[Length(min=5, max=8), Regexp(regex=r"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
     website = StringField("Halls Website", validators=[DataRequired()])
     rent = PriceField("Rent £", validators=[DataRequired(), NumberRange(min=0, max=10000)])
     comment = TextAreaField("Comment", validators=[Length(max=1000)])
@@ -147,7 +146,7 @@ class HallsRequestForm(FlaskForm):
     university = RadioField("Which university do you belong to?", choices=[('cardiff_uni','Cardiff University'),('cardiff_met','Cardiff Metropolitan University'),('usw','University of South Wales')], validators=[DataRequired()])
     first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=58)])
     last_name = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=58)])
-    user_email = StringField("Email", validators=[DataRequired()])
+    user_email = StringField("Email", validators=[DataRequired(), Regexp(regex=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", message="Invalid email")])
 
     submit = SubmitField("Submit Request")
 
