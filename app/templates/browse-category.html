@@ -55,6 +55,7 @@
                     <p>Security Rating: {{ review.security_rating }}</p>
                     <p>Landlord Rating: {{ review.landlord_rating }}</p>
                     <p>{{ review.comment }}</p>
+                    <a href="{{ url_for('report',review_id=review.id) }}">Report</a>
 
                 {% elif browse_type == "halls" %}
                     <p>Address: {{ review.property.address }}</p>
@@ -65,6 +66,7 @@
                     <p>Security Rating: {{ review.security_rating }}</p>
                     <p>Landlord Rating: {{ review.landlord_rating }}</p>
                     <p>{{ review.comment }}</p>
+                    <a href="{{ url_for('report',review_id=review.id) }}">Report</a>
 
                 {% elif browse_type == "landlord" %}
                     <p>Landlord: {{ review.estate_agent.name }}</p>
@@ -74,6 +76,7 @@
                     <p>Condition Rating: {{ review.condition_rating }}</p>
                     <p>Security Rating: {{ review.security_rating }}</p>
                     <p>{{ review.comment }}</p>
+                    <a href="{{ url_for('report',review_id=review.id) }}">Report</a>
                 {% endif %}
             </div>
         {% endfor %}

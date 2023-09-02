@@ -131,6 +131,8 @@ def autocomplete_agent():
 def create():
     form = CreateReviewForm()
     if form.validate_on_submit():
+        print (form.email.data)
+
         existing_user = User.query.filter_by(email=form.email.data).first()
 
         if not existing_user:
