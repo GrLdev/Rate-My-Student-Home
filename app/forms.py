@@ -28,7 +28,7 @@ class CreateReviewForm(FlaskForm):
     address_line_2 = StringField("Address Line 2", validators=[Length(max=94)])
     city = StringField("City", validators=[Length(min=2, max=58)])
     postcode = StringField("Postcode", validators=[Length(min=5, max=8), Regexp("([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})", message="Invalid postcode")])
-    hall = SelectField("Halls", choices=[(hall.id, Property.query.filter_by(id=hall.property_id).first().address) for hall in Halls.query.all()])
+    hall = SelectField("Halls", choices=[(Halls.id, Property.query.filter_by(id=hall.property_id).first().address) for hall in Halls.query.all()])
 
     # step 2
     overall_rating = IntegerRangeField("Overall Rating", default=3 , validators=[DataRequired(), NumberRange(min=1, max=5)])
