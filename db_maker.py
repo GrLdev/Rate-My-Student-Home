@@ -32,6 +32,58 @@ with app.app_context():
         rent=2000
     )
 
+    review3 = Review(
+        user_id=1,
+        property_id=3,
+        estate_agent_id=2,
+        overall_rating=5,
+        condition_rating=5,
+        security_rating=5,
+        landlord_rating=5,
+        date=datetime.now(),
+        comment="Excellent property and service!",
+        rent=1700
+    )
+
+    review4 = Review(
+        user_id=2,
+        property_id=4,
+        estate_agent_id=2,
+        overall_rating=4,
+        condition_rating=4,
+        security_rating=3,
+        landlord_rating=5,
+        date=datetime.now(),
+        comment="Good value for money.",
+        rent=1600
+    )
+
+    review5 = Review(
+        user_id=1,
+        property_id=5,
+        estate_agent_id=3,
+        overall_rating=1,
+        condition_rating=1,
+        security_rating=1,
+        landlord_rating=1,
+        date=datetime.now(),
+        comment="Poor experience, would not recommend.",
+        rent=6200
+    )
+
+    review6 = Review(
+        user_id=2,
+        property_id=6,
+        estate_agent_id=3,
+        overall_rating=3,
+        condition_rating=2,
+        security_rating=3,
+        landlord_rating=4,
+        date=datetime.now(),
+        comment="Average experience, needs improvement.",
+        rent=5500
+    )
+
     property1 = Property(
         lat=51.49,
         lng=-3.18,
@@ -631,7 +683,7 @@ with app.app_context():
         password="pbkdf2:sha256:600000$Weyy3Frj6jb0BztH$a05649d5da77f0ed8e523e845c1414ad67862be132c5bf5b84d8026b0d01391e" #"password"
     )
 
-    db.session.add_all([review1, review2, 
+    db.session.add_all([review1, review2, review3, review4, review5, review6,
                         property1, property2, property3, property4, property5, property6, property7, property8, property9, property10, property11, property12, property13, property14, property15, property16, property17, property18, property19, property20,
                         house1, house2, 
                         talybont_south, senghennydd_court, aberconway_hall, aberdare_hall, adam_street_gardens, cartwright_court, clodien_house, colum_hall, gordon_hall, hodge_hall, roy_jenkins_hall, senghennydd_hall, student_houses_colum, student_houses_village, talybont_court, talybont_gate, talybont_north, university_hall,
